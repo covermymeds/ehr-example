@@ -4,13 +4,13 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/patients/list.html'
-], function ($, _, Backbone, template) {
+    'models/patient',
+    'text!templates/patients/show.html'
+], function ($, _, Backbone, Patient, template) {
 
     return Backbone.View.extend({
         events: {
-            'click .add': 'addPatient',
-            'click .patient': 'showPatient'
+            'click .add': 'addRequest'
         },
 
         initialize: function (options) {
@@ -25,26 +25,20 @@ define([
             }
 
             this.template = _.template(template);
-            this.elem = $(this.template({ 'patients': this.patientsCollection }));
+            this.elem = $(this.template({ patient: new Patient() }));
             this.render();
         },
 
-        addPatient: function (event) {
+        addRequest: function () {
             event.preventDefault();
-            this.trigger('scene:change', 'patientAdd');
-        },
-
-        showPatient: function (event) {
-            event.preventDefault();
-
-            var id = $(event.target).data('id');
-
-            this.trigger('scene:change', 'patientShow', { reload: true, id: id });
+            this.trigger('scene:change', 'requestAdd', { patient: this.patient });
         },
 
         reload: function () {
-            this.elem.html(this.template({ patients: this.patientsCollection }));
+            this.patient = this.patientsCollection.get(this.id);
+            this.elem.html(this.template({ patient: this.patient }));
         }
     });
 
 });
+

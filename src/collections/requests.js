@@ -2,13 +2,14 @@
 /*global define: false */
 define([
     'backbone',
-    'models/patient',
+    'models/request',
     'localstorage'
-], function (Backbone, Patient) {
+], function (Backbone, Request) {
 
     return Backbone.Collection.extend({
-        model: Patient,
-        localStorage: new Backbone.LocalStorage('Patients')
+        model: Request,
+        localStorage: new Backbone.LocalStorage('Requests')
     });
 
 });
+

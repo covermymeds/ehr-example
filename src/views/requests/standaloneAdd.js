@@ -4,17 +4,18 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/requests/add.html',
+    'text!templates/requests/standaloneAdd.html',
     'models/request'
 ], function ($, _, Backbone, template, RequestModel) {
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel',
-            'click .create': 'createRequest'
+            'click .cancel': 'cancel'
         },
 
         initialize: function (options) {
+            var self = this;
+
             options = options || {};
 
             if (options.el !== undefined) {
@@ -26,21 +27,17 @@ define([
             }
             this.elem = $(template);
             this.render();
-            $('#drug').drugSearch();
-            $('#form').formSearch();
-        },
 
-        createRequest: function () {
-            // Probably let the jQuery plugin handle this
-            // $().createRequest;
-            var request = new RequestModel({
-                patient: {
-                    first_name: this.$('input[name="request[patient][first_name]"]').val()
+            $('#standalone-drug').drugSearch();
+            $('#standalone-form').formSearch();
+            $('#create').createRequest({
+                success: function () {
+                    self.trigger('scene:change', 'dashboard', { reload: true });
+                },
+                error: function () {
+                    alert('There was a problem creating your request, please try again');
                 }
             });
-
-            this.patient.get('requestsCollection').add(request);
-            this.trigger('scene:change', 'patientShow', { reload: true });
         },
 
         cancel: function (event) {
@@ -50,3 +47,4 @@ define([
     });
 
 });
+

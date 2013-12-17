@@ -1,14 +1,17 @@
 /*jslint sloppy: true, nomen: true */
 /*global define: false */
 define([
-    'backbone'
-], function (Backbone) {
+    'backbone',
+    'collections/requests'
+], function (Backbone, RequestsCollection) {
 
     return Backbone.Model.extend({
     	defaults: {
-    		firstName: 'John',
-    		lastName: 'Doe',
-    		dateOfBirth: '01/01/1900'
+    		first_name: 'John',
+    		last_name: 'Doe',
+    		date_of_birth: '01/01/1900',
+            state: 'OH',
+            requestsCollection: new RequestsCollection()
     	}
     });
 

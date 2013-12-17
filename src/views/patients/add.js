@@ -4,13 +4,14 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'models/patient',
     'text!templates/patients/add.html'
-], function ($, _, Backbone, template) {
+], function ($, _, Backbone, Patient, template) {
 
     return Backbone.View.extend({
         events: {
             'click .cancel': 'cancel',
-            'click button': 'createPatient'
+            'click .create': 'create'
         },
 
         initialize: function (options) {
@@ -28,16 +29,27 @@ define([
             this.render();
         },
 
-        createPatient: function () {
+        create: function (event) {
             // Add patient
-            // this.patientsCollection.add(new Patient({ first_name: 'blah' }));
+            var patient = new Patient({
+                first_name: this.$('input[name="patient[first_name]"]').val(),
+                last_name: this.$('input[name="patient[last_name]"]').val(),
+                date_of_birth: this.$('input[name="patient[date_of_birth]"]').val(),
+                state: this.$('select[name="patient[state]"]').val()
+            });
+
+            //patient.save();
+
+            this.patientsCollection.add(patient);
 
             // Clear out form
-            // this.$('input').val('');
+            this.$('input').val('');
+            this.$('select').val('');
+
+            this.trigger('scene:change', 'patientList', { reload: true  });
         },
 
         cancel: function (event) {
-            event.preventDefault();
             this.trigger('scene:change', 'patientList');
         }
     });

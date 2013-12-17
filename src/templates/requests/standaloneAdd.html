@@ -1,26 +1,26 @@
 <fieldset>
-	<legend>New Patient</legend>
+	<legend>New PA Request</legend>
 
 	<p>
 		<label for="first_name">First Name</label>
-		<input id="first_name" name="patient[first_name]" value="Test">
+		<input id="first_name" name="request[patient][first_name]">
 	</p>
 
 	<p>
 		<label for="last_name">Last Name</label>
-		<input id="last_name" name="patient[last_name]" value="Test">
+		<input id="last_name" name="request[patient][last_name]">
 	</p>
 
 	<p>
 		<label for="date_of_birth">Date of Birth</label>
-		<input id="date_of_birth" name="patient[date_of_birth]" value="01/01/1900">
+		<input id="date_of_birth" name="request[patient][date_of_birth]">
 	</p>
 
 	<p>
 		<label for="state">State</label>
-		<select id="state" name="patient[state]">
+		<select id="state" name="request[state]">
 			<option>Select&hellip;</option>
-      <option value="AL" selected="selected">Alabama</option> 
+      <option value="AL">Alabama</option> 
       <option value="AK">Alaska</option> 
       <option value="AZ">Arizona</option> 
       <option value="AR">Arkansas</option> 
@@ -72,10 +72,20 @@
       <option value="WI">Wisconsin</option> 
       <option value="WY">Wyoming</option>
 		</select>
+  </p>
+
+	<p>
+		<label for="drug">Drug</label>
+    <input id="standalone-drug" name="request[drug_id]">
 	</p>
 
 	<p>
-		<button class="btn btn-default cancel">Cancel</button><button class="btn btn-primary create">Create</button>
+		<label for="form">Form</label>
+		<input id="standalone-form" name="request[form_id]">
 	</p>
+  <p>
+    <button class="btn btn-default cancel">Cancel</button>
+    <button id="create" class="btn btn-primary">Create</button>
+  </p>
 
 </fieldset>

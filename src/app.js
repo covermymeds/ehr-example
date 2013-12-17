@@ -8,11 +8,16 @@ define([
     'views/default',
     'views/patients/list',
     'views/patients/add',
+    'views/patients/show',
     'views/requests/list',
     'views/requests/add',
+    'views/requests/standaloneAdd',
     'collections/patients',
-    'text!templates/navigation.html'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, RequestListView, RequestAddView, PatientsCollection, navigationTemplate) {
+    'text!templates/navigation.html',
+    'cmmplugins',
+    'cmmconfig',
+    'typeahead'
+], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddView, StandaloneAddView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
 
@@ -67,20 +72,25 @@ define([
             var el,
                 key;
 
+            _.bindAll(this, 'changeScene');
+
             this.elem = $(navigationTemplate);
             this.render();
 
             el = $('#page-load-target');
 
             this.patientsCollection = new PatientsCollection();
+            this.patientsCollection.fetch();
 
             this.scenes = {};
             this.scenes.index = new DefaultView({ el: el });
-            this.scenes.patientList = new PatientListView({ el: el, 'patientsCollection': this.patientsCollection });
-            this.scenes.patientAdd = new PatientAddView({ el: el, 'patientsCollection': this.patientsCollection });
-            // this.scenes.patientShow = new PatientShowView({ el: el });
+            this.scenes.patientList = new PatientListView({ el: el, patientsCollection: this.patientsCollection });
+            this.scenes.patientAdd = new PatientAddView({ el: el, patientsCollection: this.patientsCollection });
+            this.scenes.patientShow = new PatientShowView({ el: el, patientsCollection: this.patientsCollection });
+
             this.scenes.requestList = new RequestListView({ el: el });
             this.scenes.requestAdd = new RequestAddView({ el: el });
+            this.scenes.standaloneAdd = new StandaloneAddView({ el: el });
 
             for (key in this.scenes) {
                 if (this.scenes.hasOwnProperty(key)) {
@@ -94,7 +104,12 @@ define([
         },
 
         changeScene: function (scene, options) {
-            var key;
+            var key,
+                reload;
+
+            options = options || {};
+            reload = options.reload
+            delete options.reload;
 
             this.activeScene.hide();
 
@@ -102,12 +117,14 @@ define([
                 this.activeScene = this.scenes[scene];
 
                 // Transfer passed options parameters
-                if (options !== undefined) {
-                    for (key in options) {
-                        if (options.hasOwnProperty(key)) {
-                            this.activeScene[key] = options[key];
-                        }
+                for (key in options) {
+                    if (options.hasOwnProperty(key)) {
+                        this.activeScene[key] = options[key];
                     }
+                }
+
+                if (reload === true && typeof this.activeScene.reload === 'function') {
+                    this.activeScene.reload();
                 }
             }
 

@@ -1,10 +1,15 @@
-<h1>List Patients</h1>
+<div id="patients-list" class="template">
+  <h1>Patients
+  <button class="btn btn-small btn-success add">Add patient</button>
+  </h1>
 
-<% if (patients.length < 1) { %>
-<h2>No Patients</h2>
-<button class="btn btn-large add">Add patient</button>
-<% } %>
+  <% if (patients.length < 1) { %>
+  <h2>No Patients</h2>
+  <% } %>
 
-<% _.each(patients, function (patient) { %>
-	Patient!
-<% }); %>
+  <div class="list-group">
+  <% patients.each(function (patient) { %>
+    <a href="#" data-id="<%= patient.cid %>" class="list-group-item patient"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
+  <% }); %>
+  </div>
+</div>
