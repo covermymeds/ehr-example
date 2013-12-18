@@ -11,124 +11,106 @@ define([
     'views/patients/show',
     'views/requests/list',
     'views/requests/add',
-    'views/requests/standaloneAdd',
     'collections/patients',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'typeahead'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddView, StandaloneAddView, PatientsCollection, navigationTemplate) {
+], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
 
-    // Extend Backbone
     Backbone.View.prototype.close = function () {
-        if (typeof this.onClose === 'function') {
+        if (typeof this.onClose === "function") {
             this.onClose();
         }
-
         this.undelegateEvents();
         this.elem.remove();
-    };
-
-    Backbone.View.prototype.hide = function (duration, callback) {
-        if (duration === undefined) {
-            duration = 0;
-        }
-
-        this.undelegateEvents();
-        this.elem.fadeOut(duration, callback);
-    };
-
-    Backbone.View.prototype.show = function (duration, callback) {
-        if (duration === undefined) {
-            duration = 0;
-        }
-
-        this.delegateEvents();
-        this.elem.fadeIn(duration, callback);
     };
 
     Backbone.View.prototype.render = function () {
         this.$el.append(this.elem);
     };
 
+    // Extend localStorage
+    Storage.prototype.setObject = function (key, val) {
+        localStorage.setItem(key, JSON.stringify(val));
+    };
+
+    Storage.prototype.getObject = function (key) {
+        return JSON.parse(localStorage.getItem(key));
+    };
+
     // App
     AppController = Backbone.View.extend({
         events: {
-            'click .nav a': function (event) {
-                var view = $(event.target).attr('href');
-
-                event.preventDefault();
-                this.changeScene(view);
-
-                // Update navigation highlight state
-                this.$('.nav li').removeClass('active');
-                this.$(event.target).parents('li').addClass('active');
-            }
+            'click .nav a': 'navigation'
         },
 
         initialize: function () {
             var el,
                 key;
 
-            _.bindAll(this, 'changeScene');
+            _.bindAll(this, 'changeView', 'navigation');
 
             this.elem = $(navigationTemplate);
             this.render();
 
-            el = $('#page-load-target');
+            this.el = $('#page-load-target');
 
             this.patientsCollection = new PatientsCollection();
             this.patientsCollection.fetch();
 
-            this.scenes = {};
-            this.scenes.index = new DefaultView({ el: el });
-            this.scenes.patientList = new PatientListView({ el: el, patientsCollection: this.patientsCollection });
-            this.scenes.patientAdd = new PatientAddView({ el: el, patientsCollection: this.patientsCollection });
-            this.scenes.patientShow = new PatientShowView({ el: el, patientsCollection: this.patientsCollection });
+            this.views = {
+                index: DefaultView,
+                patientList: PatientListView,
+                patientAdd: PatientAddView,
+                patientShow: PatientShowView,
+                requestList: RequestListView,
+                requestAdd: RequestAddView
+            };
 
-            this.scenes.requestList = new RequestListView({ el: el });
-            this.scenes.requestAdd = new RequestAddView({ el: el });
-            this.scenes.standaloneAdd = new StandaloneAddView({ el: el });
-
-            for (key in this.scenes) {
-                if (this.scenes.hasOwnProperty(key)) {
-                    this.scenes[key].on('scene:change', this.changeScene);
-                    this.scenes[key].hide();
-                }
-            }
-
-            this.activeScene = this.scenes.index;
-            this.activeScene.show();
+            this.activeView = new this.views.index({ el: this.el });
         },
 
-        changeScene: function (scene, options) {
-            var key,
-                reload;
+        changeView: function (view, options) {
+            options = _.extend(options || {}, { el: this.el });
 
-            options = options || {};
-            reload = options.reload
-            delete options.reload;
+            if (this.views[view] !== undefined) {
+                this.activeView.off('view:change');
+                this.activeView.close();
 
-            this.activeScene.hide();
+                this.activeView = new this.views[view](options);
+                this.activeView.on('view:change', this.changeView);
+            }
+        },
 
-            if (this.scenes[scene] !== undefined) {
-                this.activeScene = this.scenes[scene];
+        navigation: function (event) {
+            var view,
+                options;
 
-                // Transfer passed options parameters
-                for (key in options) {
-                    if (options.hasOwnProperty(key)) {
-                        this.activeScene[key] = options[key];
-                    }
-                }
+            view = $(event.target).attr('href');
+            event.preventDefault();
 
-                if (reload === true && typeof this.activeScene.reload === 'function') {
-                    this.activeScene.reload();
-                }
+            if (view === '#') {
+                return;
             }
 
-            this.activeScene.show();
+            switch (view) {
+            case 'requestAdd':
+            case 'patientList':
+                options = { patientsCollection: this.patientsCollection }
+                break;
+            default:
+                options = {};
+                break;
+            }
+
+            this.changeView(view, options);
+
+            // Update navigation highlight state
+            this.$('.nav li').removeClass('active');
+            this.$(event.target).parents('li').addClass('active');
         }
     });
 

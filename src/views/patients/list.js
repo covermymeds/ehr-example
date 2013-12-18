@@ -25,25 +25,21 @@ define([
             }
 
             this.template = _.template(template);
-            this.elem = $(this.template({ 'patients': this.patientsCollection }));
+            this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
         },
 
         addPatient: function (event) {
             event.preventDefault();
-            this.trigger('scene:change', 'patientAdd');
+            this.trigger('view:change', 'patientAdd', { patientsCollection: this.patientsCollection });
         },
 
         showPatient: function (event) {
             event.preventDefault();
 
-            var id = $(event.target).data('id');
+            var patientId = $(event.target).data('id');
 
-            this.trigger('scene:change', 'patientShow', { reload: true, id: id });
-        },
-
-        reload: function () {
-            this.elem.html(this.template({ patients: this.patientsCollection }));
+            this.trigger('view:change', 'patientShow', { patientId: patientId, patientsCollection: this.patientsCollection });
         }
     });
 

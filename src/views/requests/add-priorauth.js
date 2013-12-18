@@ -4,9 +4,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/requests/add.html',
-    'models/request'
-], function ($, _, Backbone, template, RequestModel) {
+    'text!templates/requests/add-priorauth.html',
+    'models/request',
+    'models/patient'
+], function ($, _, Backbone, template, RequestModel, PatientModel) {
 
     return Backbone.View.extend({
         events: {
@@ -14,6 +15,7 @@ define([
             'click .create': 'createRequest'
         },
 
+        /* Constructor */
         initialize: function (options) {
             options = options || {};
 
@@ -24,15 +26,30 @@ define([
             if (options.patientsCollection !== undefined) {
                 this.patientsCollection = options.patientsCollection;
             }
-            this.elem = $(template);
+
+            this.template = _.template(template);
+            this.elem = $(this.template({ patient: new PatientModel() }));
             this.render();
+        },
+
+        /* Re-draw the view's template */
+        reload: function () {
+            this.elem.html(this.template({ patient: this.patient }));
+        },
+
+        /* Add custom event handlers/plugins */
+        onShow: function () {
             $('#drug').drugSearch();
             $('#form').formSearch();
         },
 
+        /* Remove custom event handlers/plugins */
+        onHide: function () {
+            $('#drug').drugSearch('destroy');
+            $('#form').formSearch('destroy');
+        },
+
         createRequest: function () {
-            // Probably let the jQuery plugin handle this
-            // $().createRequest;
             var request = new RequestModel({
                 patient: {
                     first_name: this.$('input[name="request[patient][first_name]"]').val()
@@ -40,12 +57,12 @@ define([
             });
 
             this.patient.get('requestsCollection').add(request);
-            this.trigger('scene:change', 'patientShow', { reload: true });
+            this.trigger('view:change', 'patientShow', { reload: true });
         },
 
         cancel: function (event) {
             event.preventDefault();
-            this.trigger('scene:change', 'index');
+            this.trigger('view:change', 'index');
         }
     });
 

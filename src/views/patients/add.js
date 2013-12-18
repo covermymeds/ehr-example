@@ -25,7 +25,8 @@ define([
                 this.patientsCollection = options.patientsCollection;
             }
 
-            this.elem = $(template);
+            this.template = _.template(template);
+            this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
         },
 
@@ -38,6 +39,7 @@ define([
                 state: this.$('select[name="patient[state]"]').val()
             });
 
+            // TODO: Get this working with localStorage Backbone.js plugin
             //patient.save();
 
             this.patientsCollection.add(patient);
@@ -46,11 +48,11 @@ define([
             this.$('input').val('');
             this.$('select').val('');
 
-            this.trigger('scene:change', 'patientList', { reload: true  });
+            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
         },
 
         cancel: function (event) {
-            this.trigger('scene:change', 'patientList');
+            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
         }
     });
 

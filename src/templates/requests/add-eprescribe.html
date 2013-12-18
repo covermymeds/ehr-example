@@ -1,0 +1,28 @@
+<div id="request-add" class="template">
+	<fieldset>
+		<legend>New PA Request</legend>
+
+		<input type="hidden" id="first_name" name="request[patient][first_name]" value="<%= patient.get('first_name') %>">
+		<input type="hidden" id="last_name" name="request[patient][last_name]" value="<%= patient.get('last_name') %>">
+		<input type="hidden" id="date_of_birth" name="request[patient][date_of_birth]" value="<%= patient.get('date_of_birth') %>">
+		<select name="request[state]" style="display: none;">
+		  <option value="<%= patient.get('state') %>"></option>
+		</select>
+
+		<p>
+			<label for="drug">Drug</label>
+		    <input id="drug" name="request[drug_id]">
+		</p>
+
+		<p>
+			<label for="form">Form</label>
+			<input id="form" name="request[form_id]">
+		</p>
+
+		<p>
+			<button class="btn btn-default cancel">Cancel</button>
+			<button class="btn btn-primary create">Create</button>
+		</p>
+
+	</fieldset>
+</div>

@@ -1,10 +1,15 @@
 /*jslint sloppy: true, nomen: true */
 /*global define: false */
+
+/**
+ * This view handles creating a PA request by displaying a form
+ * with patient/drug/form information.
+ */
 define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/requests/standaloneAdd.html',
+    'text!templates/requests/add-eprescribe.html',
     'models/request'
 ], function ($, _, Backbone, template, RequestModel) {
 
@@ -13,6 +18,7 @@ define([
             'click .cancel': 'cancel'
         },
 
+        /* Constructor */
         initialize: function (options) {
             var self = this;
 
@@ -25,14 +31,25 @@ define([
             if (options.patientsCollection !== undefined) {
                 this.patientsCollection = options.patientsCollection;
             }
-            this.elem = $(template);
+
+            this.template = _.template(template);
+            this.elem = $(this.template());
             this.render();
+        },
+
+        /* Add custom event handlers/plugins */
+        onShow: function () {
+            var self = this;
 
             $('#standalone-drug').drugSearch();
             $('#standalone-form').formSearch();
             $('#create').createRequest({
-                success: function () {
-                    self.trigger('scene:change', 'dashboard', { reload: true });
+                success: function (data) {
+                    var ids = localStorage.getObject('ids') || [];
+                    ids.push(data.request.id);
+                    localStorage.setObject('ids', ids);
+
+                    self.trigger('view:change', self.previousView, { reload: true });
                 },
                 error: function () {
                     alert('There was a problem creating your request, please try again');
@@ -40,9 +57,17 @@ define([
             });
         },
 
+        /* Remove custom event handlers/plugins */
+        onHide: function () {
+            $('#standalone-drug').drugSearch('destroy');
+            $('#standalone-form').formSearch('destroy');
+            $('#create').createRequest('destroy');
+        },
+
+        /* Handle "cancel" button click */
         cancel: function (event) {
             event.preventDefault();
-            this.trigger('scene:change', 'index');
+            this.trigger('view:change', this.previousView);
         }
     });
 

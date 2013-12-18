@@ -24,19 +24,18 @@ define([
                 this.patientsCollection = options.patientsCollection;
             }
 
+            if (options.patientId !== undefined) {
+                this.patientId = options.patientId;
+            }
+
             this.template = _.template(template);
-            this.elem = $(this.template({ patient: new Patient() }));
+            this.elem = $(this.template({ patient: this.patientsCollection.get(this.patientId) }));
             this.render();
         },
 
-        addRequest: function () {
+        addRequest: function (event) {
             event.preventDefault();
-            this.trigger('scene:change', 'requestAdd', { patient: this.patient });
-        },
-
-        reload: function () {
-            this.patient = this.patientsCollection.get(this.id);
-            this.elem.html(this.template({ patient: this.patient }));
+            this.trigger('view:change', 'requestAdd', { patientsCollection: this.patientsCollection, patientId: this.patientId });
         }
     });
 

@@ -3,12 +3,12 @@
   <button class="btn btn-small btn-success add">Add patient</button>
   </h1>
 
-  <% if (patients.length < 1) { %>
+  <% if (patientsCollection.length < 1) { %>
   <h2>No Patients</h2>
   <% } %>
 
   <div class="list-group">
-  <% patients.each(function (patient) { %>
+  <% patientsCollection.each(function (patient) { %>
     <a href="#" data-id="<%= patient.cid %>" class="list-group-item patient"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
   <% }); %>
   </div>
