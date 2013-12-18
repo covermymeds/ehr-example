@@ -35,7 +35,7 @@ define([
 
         addRequest: function (event) {
             event.preventDefault();
-            this.trigger('view:change', 'requestAdd', { patientsCollection: this.patientsCollection, patientId: this.patientId });
+            this.trigger('view:change', 'requestAddEPrescribe', { patientsCollection: this.patientsCollection, patientId: this.patientId });
         }
     });
 

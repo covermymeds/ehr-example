@@ -1,10 +1,5 @@
 /*jslint sloppy: true, nomen: true */
 /*global define: false */
-
-/**
- * This view handles creating a PA request by displaying a form
- * with patient/drug/form information.
- */
 define([
     'jquery',
     'underscore',
@@ -15,13 +10,12 @@ define([
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel'
+            'click .cancel': 'cancel',
+            'click .create': 'createRequest'
         },
 
         /* Constructor */
         initialize: function (options) {
-            var self = this;
-
             options = options || {};
 
             if (options.el !== undefined) {
@@ -32,44 +26,39 @@ define([
                 this.patientsCollection = options.patientsCollection;
             }
 
+            if (options.patientId !== undefined) {
+                this.patientId = options.patientId;
+            }
+
             this.template = _.template(template);
-            this.elem = $(this.template());
+            this.elem = $(this.template({ patient: this.patientsCollection.get(this.patientId) }));
             this.render();
-        },
 
-        /* Add custom event handlers/plugins */
-        onShow: function () {
-            var self = this;
-
-            $('#standalone-drug').drugSearch();
-            $('#standalone-form').formSearch();
-            $('#create').createRequest({
-                success: function (data) {
-                    var ids = localStorage.getObject('ids') || [];
-                    ids.push(data.request.id);
-                    localStorage.setObject('ids', ids);
-
-                    self.trigger('view:change', self.previousView, { reload: true });
-                },
-                error: function () {
-                    alert('There was a problem creating your request, please try again');
-                }
-            });
+            $('#drug').drugSearch();
+            $('#form').formSearch();
         },
 
         /* Remove custom event handlers/plugins */
-        onHide: function () {
-            $('#standalone-drug').drugSearch('destroy');
-            $('#standalone-form').formSearch('destroy');
-            $('#create').createRequest('destroy');
+        onClose: function () {
+            $('#drug').drugSearch('destroy');
+            $('#form').formSearch('destroy');
         },
 
-        /* Handle "cancel" button click */
+        createRequest: function () {
+            var request = new RequestModel({
+                patient: {
+                    first_name: this.$('input[name="request[patient][first_name]"]').val()
+                }
+            });
+
+            this.patient.get('requestsCollection').add(request);
+            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
+        },
+
         cancel: function (event) {
             event.preventDefault();
-            this.trigger('view:change', this.previousView);
+            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
         }
     });
 
 });
-

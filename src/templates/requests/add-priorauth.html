@@ -1,7 +1,6 @@
 <fieldset>
 	<legend>New PA Request</legend>
 
-  <% if (typeof patient === "undefined") { %>
 	<p>
 		<label for="first_name">First Name</label>
 		<input id="first_name" name="request[patient][first_name]">
@@ -74,26 +73,15 @@
       <option value="WY">Wyoming</option>
 		</select>
   </p>
-
-  <% } else { %>
-
-  <input type="hidden" id="first_name" name="request[patient][first_name]" value="<%= patient.get('first_name') %>">
-  <input type="hidden" id="last_name" name="request[patient][last_name]" value="<%= patient.get('last_name') %>">
-  <input type="hidden" id="date_of_birth" name="request[patient][date_of_birth]" value="<%= patient.get('date_of_birth') %>">
-  <select name="request[state]" style="display: none;">
-    <option value="<%= patient.get('state') %>"></option>
-  </select>
-
-  <% } %>
-
+  
 	<p>
-		<label for="standalone-drug">Drug</label>
-    <input id="standalone-drug" name="request[drug_id]">
+		<label for="drug">Drug</label>
+    <input id="drug" name="request[drug_id]">
 	</p>
 
 	<p>
-		<label for="standalone-form">Form</label>
-		<input id="standalone-form" name="request[form_id]">
+		<label for="form">Form</label>
+		<input id="form" name="request[form_id]">
 	</p>
 
   <p>

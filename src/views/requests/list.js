@@ -17,12 +17,9 @@ define([
 
             this.elem = $(template);
             this.render();
-        },
 
-        reload: function() {
-            var ids = localStorage.getObject('ids') || [];
-            // ['AY3MY7', 'PR6RY6', 'EY9BD9']
-
+            var ids = localStorage.getObject('ids') || ['AY3MY7', 'PR6RY6', 'EY9BD9'];
+            
             this.$('#dashboard').dashboard({
                 ids: ids
             });

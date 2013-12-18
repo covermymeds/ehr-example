@@ -10,13 +10,14 @@ define([
     'views/patients/add',
     'views/patients/show',
     'views/requests/list',
-    'views/requests/add',
+    'views/requests/add-eprescribe',
+    'views/requests/add-priorauth',
     'collections/patients',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'typeahead'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddView, PatientsCollection, navigationTemplate) {
+], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
 
@@ -67,7 +68,8 @@ define([
                 patientAdd: PatientAddView,
                 patientShow: PatientShowView,
                 requestList: RequestListView,
-                requestAdd: RequestAddView
+                requestAddEPrescribe: RequestAddEPrescribeView,
+                requestAddPriorAuth: RequestAddPriorAuthView
             };
 
             this.activeView = new this.views.index({ el: this.el });
