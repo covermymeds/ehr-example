@@ -16,7 +16,7 @@ define([
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
-    'typeahead'
+    'select2'
 ], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
