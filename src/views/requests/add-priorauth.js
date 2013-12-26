@@ -17,22 +17,16 @@ define([
         events: {
             'click .cancel': 'cancel'
         },
+        template: _.template(template),
 
         /* Constructor */
         initialize: function (options) {
             var self = this;
 
-            options = options || {};
-
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
-
             if (options.patientsCollection !== undefined) {
                 this.patientsCollection = options.patientsCollection;
             }
 
-            this.template = _.template(template);
             this.elem = $(this.template());
             this.render();
 

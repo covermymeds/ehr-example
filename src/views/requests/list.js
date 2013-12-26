@@ -9,12 +9,6 @@ define([
 
     return Backbone.View.extend({
         initialize: function (options) {
-            options = options || {};
-
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
-
             this.elem = $(template);
             this.render();
 

@@ -49,7 +49,7 @@ define([
             this.$('input').val('');
             this.$('select').val('');
 
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
+            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection, patient: patient });
         },
 
         cancel: function (event) {
