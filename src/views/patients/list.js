@@ -15,9 +15,7 @@ define([
         template: _.template(template),
 
         initialize: function (options) {
-            if (options.patientsCollection !== undefined) {
-                this.patientsCollection = options.patientsCollection;
-            }
+            this.patientsCollection = options.patientsCollection;
 
             this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();

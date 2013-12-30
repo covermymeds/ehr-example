@@ -13,20 +13,15 @@ define([
             'click .cancel': 'cancel',
             'click .create': 'create'
         },
+
         template: _.template(template),
 
         initialize: function (options) {
             options = options || {};
 
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
+            this.el = options.el;
+            this.patientsCollection = options.patientsCollection;
 
-            if (options.patientsCollection !== undefined) {
-                this.patientsCollection = options.patientsCollection;
-            }
-
-            //this.template = _.template(template);
             this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
         },
