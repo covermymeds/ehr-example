@@ -1,16 +1,25 @@
 <div id="patient-show" class="template">
   <h3><%= patient.get('first_name') %> <%= patient.get('last_name') %></h3>
+  <hr />
 
-  <h3>PA Requests</h3>
+  <h4>PA Requests</h4>
 
-  <div class="list-group">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Drug</th>
+        <th>Form</th>
+        <th></th>
+      </tr>
+    </thead>
     <% patient.get('requestsCollection').each(function(request) { %>
-      <a href="#" class="list-group-item">
-        Drug ID: <%= request.get('prescription.drug_id') %>
-        Form ID: <%= request.get('form_id') %>
-      </a>
+      <tr>
+        <td>Drug ID: <%= request.get('prescription.drug_id') %></td>
+        <td>Form ID: <%= request.get('form_id') %></td>
+        <td><button class="btn btn-primary pull-right start" data-request-id="<%= request.cid %>">Start</button></td>
+      </tr>
     <% }); %>
-  </div>
+  </table>
 
   <button class="btn btn-success add">Add PA Request</button>
 </div>

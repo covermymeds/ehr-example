@@ -9,13 +9,13 @@ require({
         localstorage: '../lib/backbone.localStorage-1.1.7.min',
         cmmplugins: '../lib/js-api-consumer',
         cmmconfig: '../lib/config',
-        typeahead: '../lib/typeahead.min'
+        select2: '../lib/select2.min'
     },
     shim: {
         cmmplugins: {
-            deps: ['jquery', 'typeahead', 'cmmconfig']
+            deps: ['jquery', 'select2', 'cmmconfig']
         },
-        typeahead: {
+        select2: {
             deps: ['bootstrap']
         },
         localstorage: {

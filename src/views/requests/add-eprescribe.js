@@ -13,15 +13,10 @@ define([
             'click .cancel': 'cancel',
             'click .create': 'createRequest'
         },
+        template: _.template(template),
 
         /* Constructor */
         initialize: function (options) {
-            options = options || {};
-
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
-
             if (options.patientsCollection !== undefined) {
                 this.patientsCollection = options.patientsCollection;
             }
@@ -30,8 +25,8 @@ define([
                 this.patientId = options.patientId;
             }
 
-            this.template = _.template(template);
-            this.elem = $(this.template({ patient: this.patientsCollection.get(this.patientId) }));
+            this.patient = this.patientsCollection.get(this.patientId);
+            this.elem = $(this.template({ patient: this.patient }));
             this.render();
 
             $('#drug').drugSearch();
@@ -46,8 +41,15 @@ define([
 
         createRequest: function () {
             var request = new RequestModel({
-                patient: {
-                    first_name: this.$('input[name="request[patient][first_name]"]').val()
+                request: {
+                    drug_id: this.$('input[name="request[drug_id]"]').val(),
+                    form_id: this.$('input[name="request[form_id]"]').val(),
+                    patient: {
+                        first_name: this.$('input[name="request[patient][first_name]"]').val(),
+                        last_name: this.$('input[name="request[patient][last_name]"]').val(),
+                        date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
+                        state: this.$('select[name="request[state]"]').val()
+                    }
                 }
             });
 

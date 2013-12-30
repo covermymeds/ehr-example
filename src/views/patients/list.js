@@ -12,19 +12,13 @@ define([
             'click .add': 'addPatient',
             'click .patient': 'showPatient'
         },
+        template: _.template(template),
 
         initialize: function (options) {
-            options = options || {};
-
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
-
             if (options.patientsCollection !== undefined) {
                 this.patientsCollection = options.patientsCollection;
             }
 
-            this.template = _.template(template);
             this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
         },

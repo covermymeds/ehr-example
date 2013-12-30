@@ -13,6 +13,7 @@ define([
             'click .cancel': 'cancel',
             'click .create': 'create'
         },
+        template: _.template(template),
 
         initialize: function (options) {
             options = options || {};
@@ -25,7 +26,7 @@ define([
                 this.patientsCollection = options.patientsCollection;
             }
 
-            this.template = _.template(template);
+            //this.template = _.template(template);
             this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
         },
@@ -48,7 +49,7 @@ define([
             this.$('input').val('');
             this.$('select').val('');
 
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
+            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection, patient: patient });
         },
 
         cancel: function (event) {

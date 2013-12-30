@@ -9,17 +9,11 @@ define([
 
     return Backbone.View.extend({
         initialize: function (options) {
-            options = options || {};
-
-            if (options.el !== undefined) {
-                this.el = options.el;
-            }
-
             this.elem = $(template);
             this.render();
 
             var ids = localStorage.getObject('ids') || ['AY3MY7', 'PR6RY6', 'EY9BD9'];
-            
+
             this.$('#dashboard').dashboard({
                 ids: ids
             });
