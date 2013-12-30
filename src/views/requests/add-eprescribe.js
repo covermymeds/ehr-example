@@ -49,6 +49,11 @@ define([
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
                         date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
                         state: this.$('select[name="request[state]"]').val()
+                    },
+                    prescription: {
+                        refills: this.$('select[name="request[prescription][refills]"]').val(),
+                        quantity: this.$('input[name="request[prescription][quantity]"]').val(),
+                        dispense_as_written: this.$('input[name="request[prescription][dispense_as_written]"]').val()
                     }
                 }
             });
