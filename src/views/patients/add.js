@@ -40,10 +40,11 @@ define([
                 state: this.$('select[name="patient[state]"]').val()
             });
 
-            // TODO: Get this working with localStorage Backbone.js plugin
-            //patient.save();
-
             this.patientsCollection.add(patient);
+
+            // TODO: Get this working with localStorage Backbone.js plugin
+            patient.save();
+
 
             // Clear out form
             this.$('input').val('');
