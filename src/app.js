@@ -12,15 +12,17 @@ define([
     'views/requests/list',
     'views/requests/add-eprescribe',
     'views/requests/add-priorauth',
+    'views/pharmacies/list',
     'collections/patients',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'select2'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PatientsCollection, navigationTemplate) {
+], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
 
+    // Extend Backbone
     Backbone.View.prototype.close = function () {
         if (typeof this.onClose === "function") {
             this.onClose();

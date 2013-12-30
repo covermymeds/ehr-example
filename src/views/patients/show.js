@@ -1,12 +1,11 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global define: false, localStorage: false, alert: true */
 define([
     'jquery',
     'underscore',
     'backbone',
-    'models/patient',
     'text!templates/patients/show.html'
-], function ($, _, Backbone, Patient, template) {
+], function ($, _, Backbone, template) {
 
     return Backbone.View.extend({
         events: {
@@ -17,14 +16,9 @@ define([
         template: _.template(template),
 
         initialize: function (options) {
-            self = this;
-            if (options.patientsCollection !== undefined) {
-                this.patientsCollection = options.patientsCollection;
-            }
-
-            if (options.patientId !== undefined) {
-                this.patientId = options.patientId;
-            }
+            this.el = options.el;
+            this.patientsCollection = options.patientsCollection;
+            this.patientId = options.patientId;
 
             this.patient = this.patientsCollection.get(this.patientId);
 

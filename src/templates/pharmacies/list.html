@@ -1,0 +1,16 @@
+<div id="pharmacies-list" class="template">
+  <h1>Pharmacies</h1>
+
+  <% if (pharmacies.length < 1) { %>
+  <h2>No Pharmacies</h2>
+  <% } %>
+
+  <ul class="list-group">
+  <% _.each(pharmacies, function (pharmacy) { %>
+  <li class="list-group-item pharmacy"><%= pharmacy %> <input type="radio" name="pharmacies" value="<%= pharmacy %>"></li>
+  <% }); %>
+  </ul>
+
+  <button class="cancel btn">Cancel</button>
+  <button class="finish btn btn-primary">Finish</button>
+</div>
