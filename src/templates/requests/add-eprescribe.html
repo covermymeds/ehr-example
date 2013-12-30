@@ -20,6 +20,54 @@
 		</p>
 
 		<p>
+			<label for="quantity">Quantity</label>
+			<input class="form-control" name="request[prescription][quantity]">
+		</p>
+
+    <p>
+      <label for="directions">Directions</label>
+      <select name="request[directions]" class="form-control">
+        <option value="">Directions / Sig</option>
+        <option value="qD">qD - EVERY DAY</option>
+        <option value="BID">BID - TWICE A DAY</option>
+        <option value="TID">TID - THREE A DAY</option>
+        <option value="QID">QID - FOUR A DAY</option>
+        <option value="PRN">PRN - AS NEEDED</option>
+        <option value="UD">UD - AS DIRECTED</option>
+      </select>
+    </p>
+
+    <p>
+      <label for="refills">Refills</label>
+      <select name="request[prescription][refills]" class="form-control">
+        <option value="">Refills</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+    </p>
+
+    <p>
+      <label>Dispense as written</label>
+      <div class="radio">
+        <label>
+          <input type="radio" name="request[prescription][dispense_as_written]" id="yes" value="Yes">
+          Yes
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="request[prescription][dispense_as_written]" id="no" value="No">
+          No
+        </label>
+      </div>
+    </p>
+
+		<p>
 			<button class="btn btn-default cancel">Cancel</button>
 			<button class="btn btn-primary create">Create</button>
 		</p>
