@@ -21,9 +21,9 @@
     </thead>
     <% requests.each(function(request) { %>
       <tr>
-        <td>Drug ID: <%= request.get('prescription.drug_id') %></td>
-        <td>Form ID: <%= request.get('form_id') %></td>
-        <td><button class="btn pull-right edit">Change Drug</button></td>
+        <td><%= request.get('drugName') %></td>
+        <td><%= request.get('formName') %></td>
+        <td><button class="btn pull-right edit" data-request-id="<%= request.cid %>">Change Drug</button></td>
         <td><input type="checkbox" name="request" class="pull-right" value="<%= request.cid %>"></td>
       </tr>
     <% }); %>

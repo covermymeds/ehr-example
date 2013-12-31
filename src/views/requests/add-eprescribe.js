@@ -33,6 +33,8 @@ define([
             // Fill in values to "edit" a request
             if (this.requestId !== undefined) {
                 requestModel = this.patientsCollection.get(this.patientId).get('requestsCollection').get(this.requestId);
+                $('#drug').select2("val", requestModel.get('request.prescription.drug_id'));
+                $('#form').select2("val", requestModel.get('request.form_id'));
                 $('#drug').select2("data", { id: requestModel.get('request.prescription.drug_id'), text: requestModel.get('drugName') });
                 $('#form').select2("data", { id: requestModel.get('request.form_id'), text: requestModel.get('formName') });
             }
@@ -45,24 +47,48 @@ define([
         },
 
         createRequest: function () {
-            var request = new RequestModel({
-                formName: this.$('input[name="request[form_id]"]').select2('data').text,
-                drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
-                request: {
-                    prescription: {
-                        drug_id: this.$('input[name="request[drug_id]"]').val()
-                    },
-                    form_id: this.$('input[name="request[form_id]"]').val(),
-                    patient: {
-                        first_name: this.$('input[name="request[patient][first_name]"]').val(),
-                        last_name: this.$('input[name="request[patient][last_name]"]').val(),
-                        date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
-                        state: this.$('select[name="request[state]"]').val()
-                    }
-                }
-            });
+            var requestModel;
 
-            this.patient.get('requestsCollection').add(request);
+            if (this.requestId !== undefined) {
+                requestModel = this.patientsCollection.get(this.patientId).get('requestsCollection').get(this.requestId);
+
+                requestModel.save({
+                    formName: this.$('input[name="request[form_id]"]').select2('data').text,
+                    drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
+                    request: {
+                        prescription: {
+                            drug_id: this.$('input[name="request[drug_id]"]').val()
+                        },
+                        form_id: this.$('input[name="request[form_id]"]').val(),
+                        patient: {
+                            first_name: this.$('input[name="request[patient][first_name]"]').val(),
+                            last_name: this.$('input[name="request[patient][last_name]"]').val(),
+                            date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
+                            state: this.$('select[name="request[state]"]').val()
+                        }
+                    }
+                });
+            } else {
+                requestModel = new RequestModel({
+                    formName: this.$('input[name="request[form_id]"]').select2('data').text,
+                    drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
+                    request: {
+                        prescription: {
+                            drug_id: this.$('input[name="request[drug_id]"]').val()
+                        },
+                        form_id: this.$('input[name="request[form_id]"]').val(),
+                        patient: {
+                            first_name: this.$('input[name="request[patient][first_name]"]').val(),
+                            last_name: this.$('input[name="request[patient][last_name]"]').val(),
+                            date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
+                            state: this.$('select[name="request[state]"]').val()
+                        }
+                    }
+                });
+
+                this.patient.get('requestsCollection').add(requestModel);
+            }
+
             this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
         },
 
