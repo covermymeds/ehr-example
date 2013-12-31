@@ -1,6 +1,7 @@
 <div id="request-add" class="template">
+  <h3>New Prescription</h3>
 	<fieldset>
-		<legend>New PA Request</legend>
+    <legend><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</legend>
 
 		<input type="hidden" id="first_name" name="request[patient][first_name]" value="<%= patient.get('first_name') %>">
 		<input type="hidden" id="last_name" name="request[patient][last_name]" value="<%= patient.get('last_name') %>">
@@ -52,24 +53,15 @@
     </p>
 
     <p>
-      <label>Dispense as written</label>
-      <div class="radio">
-        <label>
-          <input type="radio" name="request[prescription][dispense_as_written]" id="yes" value="Yes">
-          Yes
-        </label>
-      </div>
-      <div class="radio">
-        <label>
-          <input type="radio" name="request[prescription][dispense_as_written]" id="no" value="No">
-          No
-        </label>
-      </div>
+      <label>
+        Dispense as written
+        <input type="checkbox" name="request[prescription][dispense_as_written]" id="yes">
+      </label>
     </p>
 
 		<p>
 			<button class="btn btn-default cancel">Cancel</button>
-			<button class="btn btn-primary create">Create</button>
+			<button class="btn btn-primary create">Next</button>
 		</p>
 
 	</fieldset>
