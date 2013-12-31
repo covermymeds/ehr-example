@@ -9,7 +9,7 @@
 
   <div class="list-group">
   <% patientsCollection.each(function (patient) { %>
-    <a href="#" data-id="<%= patient.cid %>" class="list-group-item patient"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
+    <a href="#" data-id="<%= patient.id %>" class="list-group-item patient"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
   <% }); %>
   </div>
 </div>
