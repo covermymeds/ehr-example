@@ -10,11 +10,15 @@ require({
         cmmplugins: '../lib/js-api-consumer',
         cmmconfig: '../lib/config',
         select2: '../lib/select2.min',
-        datatables: '../lib/jquery.dataTables.min'
+        datatables: '../lib/jquery.dataTables.min',
+        datatablesbootstrap: '../lib/datatables.bootstrap'
     },
     shim: {
         datatables: {
             deps: ['jquery']
+        },
+        datatablesbootstrap: {
+            deps: ['datatables']
         },
         cmmplugins: {
             deps: ['jquery', 'select2', 'cmmconfig']

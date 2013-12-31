@@ -37,7 +37,6 @@ define([
 
             this.patientsCollection.add(patient);
 
-            // TODO: Get this working with localStorage Backbone.js plugin
             patient.save();
 
 

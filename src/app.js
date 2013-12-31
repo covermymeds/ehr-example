@@ -17,7 +17,9 @@ define([
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
-    'select2'
+    'select2',
+    'datatables',
+    'datatablesbootstrap'
 ], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;

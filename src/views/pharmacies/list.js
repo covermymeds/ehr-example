@@ -4,9 +4,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'datatables',
     'models/patient',
-    'text!templates/pharmacies/list.html'
+    'text!templates/pharmacies/list.html',
+    'datatables',
+    'datatablesbootstrap'
 ], function ($, _, Backbone, Patient, template) {
 
     /**
@@ -17,16 +18,20 @@ define([
             'click .finish': 'finish',
             'click .cancel': 'finish'
         },
+        template: _.template(template),
 
         initialize: function (options) {
             this.el = options.el;
             this.patientsCollection = options.patientsCollection;
             this.patientId = options.patientId;
 
-            this.template = _.template(template);
-            this.elem = $(this.template({ pharmacies: ['Kroger', 'CVS', 'Walgreens'] }));
-            $('.dt').dataTable();
+            this.elem = $(this.template({ pharmacies: ['Kroger', 'CVS', 'Walgreens', 'Walmart', 'Target'] }));
             this.render();
+
+            $('.dt').dataTable({
+                "sDom": "<'row'<'col-lg-9'T><'col-lg-3'f>r>t<'row'<'col-lg-6'i><'col-lg-6'p>>",
+                "sPaginationType": "bootstrap"
+            });
         },
 
         finish: function (event) {

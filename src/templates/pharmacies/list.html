@@ -12,9 +12,13 @@
       </tr>
     </thead>
     <tbody>
-      <% _.each(pharmacies, function (pharmacy) { %>
+      <% _.each(pharmacies, function (pharmacy, index) { %>
         <tr>
-          <td><%= pharmacy %> <input type="radio" name="pharmacies" value="<%= pharmacy %>"></td>
+          <td>
+            <label for="<%= index %>">
+              <input type="radio" id="<%= index %>" name="pharmacies" value="<%= pharmacy %>"> <%= pharmacy %>
+            </label>
+          </td>
         </tr>
       <% }); %>
     </tbody>
