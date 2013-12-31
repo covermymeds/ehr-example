@@ -5,11 +5,20 @@
   <h2>No Pharmacies</h2>
   <% } %>
 
-  <ul class="list-group">
-  <% _.each(pharmacies, function (pharmacy) { %>
-  <li class="list-group-item pharmacy"><%= pharmacy %> <input type="radio" name="pharmacies" value="<%= pharmacy %>"></li>
-  <% }); %>
-  </ul>
+  <table class="table table-striped dt">
+    <thead>
+      <tr>
+        <th>Pharmacy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% _.each(pharmacies, function (pharmacy) { %>
+        <tr>
+          <td><%= pharmacy %> <input type="radio" name="pharmacies" value="<%= pharmacy %>"></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
 
   <button class="cancel btn">Cancel</button>
   <button class="finish btn btn-primary">Finish</button>

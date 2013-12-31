@@ -4,6 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'datatables',
     'models/patient',
     'text!templates/pharmacies/list.html'
 ], function ($, _, Backbone, Patient, template) {
@@ -24,6 +25,7 @@ define([
 
             this.template = _.template(template);
             this.elem = $(this.template({ pharmacies: ['Kroger', 'CVS', 'Walgreens'] }));
+            $('.dt').dataTable();
             this.render();
         },
 
