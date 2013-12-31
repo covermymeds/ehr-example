@@ -71,7 +71,8 @@ define([
                 patientShow: PatientShowView,
                 requestList: RequestListView,
                 requestAddEPrescribe: RequestAddEPrescribeView,
-                requestAddPriorAuth: RequestAddPriorAuthView
+                requestAddPriorAuth: RequestAddPriorAuthView,
+                pharmaciesList: PharmaciesListView
             };
 
             this.activeView = new this.views.index({ el: this.el });
@@ -86,6 +87,8 @@ define([
 
                 this.activeView = new this.views[view](options);
                 this.activeView.on('view:change', this.changeView);
+            } else {
+                alert('That view has not been defined!');
             }
         },
 

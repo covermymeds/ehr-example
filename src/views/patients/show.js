@@ -43,17 +43,23 @@ define([
 
         createRequests: function (event) {
             var button,
-                self;
+                self,
+                count,
+                total;
 
             event.preventDefault();
 
             // Create a throwaway button to bind the "create request" action to
-            button = $('<button></button>');
+            button = $('<button>Click me!</button>');
             self = this;
 
             // Hide button, since it will only be used programatically
             this.el.append(button);
             button.hide();
+
+            // Count the number of pending requests
+            count = 0;
+            total = this.$('input[name="request"]:checked').length;
 
             // Create a PA request for each checked checkbox
             this.$('input[name="request"]:checked').each(function (index, checkbox) {
@@ -80,7 +86,7 @@ define([
                         savedIds.push();
                         localStorage.setObject('ids', savedIds);
 
-                        // Hide the "change drug" button and disable the 
+                        // Hide the "change drug" button and disable the
                         // "submit drug" checkbox
                         row = $(checkbox).parents('tr');
                         row.find('button').hide();
@@ -88,12 +94,27 @@ define([
 
                         // Remove temporary button
                         button.remove();
+
+                        // Increase the # of completed callbacks
+                        count += 1;
+
+                        // Transfer to new view if all requests were successful
+                        if (count === total) {
+                            self.trigger('view:change', 'pharmaciesList', { patientsCollection: self.patientsCollection, patientId: self.patientId });
+                        }
                     },
                     error: function (data) {
-                        alert('There was an error creating a request. Please try again.');
-
                         // Remove temporary button
                         button.remove();
+
+                        // Increase the # of completed callbacks
+                        count += 1;
+
+                        // Transfer to new view if all requests were successful
+                        if (count === total) {
+                            alert('There was an error creating one of your prescriptions. Please try again.');
+                            self.trigger('view:change', 'pharmaciesList', { patientsCollection: self.patientsCollection, patientId: self.patientId });
+                        }
                     }
                 });
 
