@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global define: false, localStorage: false, alert: false */
 
 /**
  * This view handles creating a PA request by displaying a form
@@ -9,9 +9,8 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/requests/add-priorauth.html',
-    'models/request'
-], function ($, _, Backbone, template, RequestModel) {
+    'text!templates/requests/add-priorauth.html'
+], function ($, _, Backbone, template) {
 
     return Backbone.View.extend({
         events: {
@@ -33,6 +32,7 @@ define([
             this.$('#drug').drugSearch();
             this.$('#form').formSearch();
             this.$('#create').createRequest({
+                staging: true,
                 success: function (data) {
                     var ids = localStorage.getObject('ids') || [];
                     ids.push(data.request.id);

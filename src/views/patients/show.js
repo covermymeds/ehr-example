@@ -70,6 +70,7 @@ define([
                 request = self.patient.get('requestsCollection').get(requestId).get('request');
 
                 button.createRequest({
+                    staging: true,
                     data: { request: request },
                     success: function (data) {
                         var id,

@@ -4,20 +4,19 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'models/patient',
     'text!templates/pharmacies/list.html',
     'datatables',
     'datatablesbootstrap'
-], function ($, _, Backbone, Patient, template) {
+], function ($, _, Backbone, template) {
 
     /**
      * Placeholder view to select a pharmacy for a specific drug/PA request
      */
     return Backbone.View.extend({
         events: {
-            'click .finish': 'finish',
-            'click .cancel': 'finish'
+            'click button': 'finish'
         },
+
         template: _.template(template),
 
         initialize: function (options) {

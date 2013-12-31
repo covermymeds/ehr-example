@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true, unparam: true */
-/*global define: false */
+/*global define: false, Storage: false, localStorage: false */
 define([
     'jquery',
     'bootstrap',
@@ -17,9 +17,7 @@ define([
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
-    'select2',
-    'datatables',
-    'datatablesbootstrap'
+    'select2'
 ], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
@@ -53,9 +51,6 @@ define([
         },
 
         initialize: function () {
-            var el,
-                key;
-
             _.bindAll(this, 'changeView', 'navigation');
 
             this.elem = $(navigationTemplate);
@@ -108,7 +103,7 @@ define([
             switch (view) {
             case 'requestAdd':
             case 'patientList':
-                options = { patientsCollection: this.patientsCollection }
+                options = { patientsCollection: this.patientsCollection };
                 break;
             default:
                 options = {};
