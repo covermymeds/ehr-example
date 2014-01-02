@@ -34,6 +34,33 @@ define([
 
     Backbone.View.prototype.render = function () {
         this.$el.append(this.elem);
+
+        // Display flash message
+        var flash = localStorage.getObject('flash');
+
+        if (flash !== null) {
+            this.alert(flash.type, flash.text);
+
+            // Clear out message
+            localStorage.setObject('flash', null);
+        }
+    };
+
+    Backbone.View.prototype.alert = function (type, text) {
+        // Allowed types: success, info, warning, danger
+        var html = $('<div class="alert alert-' + type + ' alert-dismissable">' +
+                      '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                      text +
+                    '</div>');
+        $('a', html).addClass('alert-link');
+        this.elem.prepend(html);
+        html.alert();
+        html.hide();
+        html.fadeIn();
+    };
+
+    Backbone.View.prototype.flash = function (type, text) {
+        localStorage.setObject('flash', { type: type, text: text });
     };
 
     // Extend localStorage
