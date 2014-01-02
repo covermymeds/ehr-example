@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true, unparam: true */
-/*global define: false, Storage: false, localStorage: false */
+/*global window: false, define: false, Storage: false, localStorage: false */
 define([
     'jquery',
     'bootstrap',
@@ -14,13 +14,14 @@ define([
     'views/requests/add-eprescribe',
     'views/requests/add-priorauth',
     'views/pharmacies/list',
+    'views/help',
     'collections/patients',
     'models/patient',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'select2'
-], function ($, Bootstrap, _, Backbone, DefaultView, NavigationView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, PatientModel, navigationTemplate) {
+], function ($, Bootstrap, _, Backbone, DefaultView, NavigationView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, HelpView, PatientsCollection, PatientModel, navigationTemplate) {
 
     // Extend Backbone
     Backbone.View.prototype.close = function () {
@@ -47,16 +48,16 @@ define([
     // Handle matching routes to "controller" methods
     var AppRouter = Backbone.Router.extend({
         routes: {
-          '': 'index',
-          'patients': 'patients',
-          'patients/new': 'newPatient',
-          'patients/:id': 'showPatient',
-          'patients/:id/drugs/new': 'newDrug',
-          'patients/:id/drugs/:id/edit': 'editDrug',
-          'patients/:id/pharmacies': 'showPharmacies',
-          'dashboard': 'dashboard',
-          'requests/new': 'newRequest',
-          'help': 'help'
+            '': 'index',
+            'patients': 'patients',
+            'patients/new': 'newPatient',
+            'patients/:id': 'showPatient',
+            'patients/:id/drugs/new': 'newDrug',
+            'patients/:id/drugs/:id/edit': 'editDrug',
+            'patients/:id/pharmacies': 'showPharmacies',
+            'dashboard': 'dashboard',
+            'requests/new': 'newRequest',
+            'help': 'help'
         },
 
         initialize: function () {
@@ -89,6 +90,28 @@ define([
             });
         },
 
+        // Update navigation highlight state
+        highlightNavigation: function (target) {
+            var className;
+
+            switch (target) {
+            case 'Home':
+                className = 'home';
+                break;
+            case 'e-Prescribing':
+                className = 'eprescribe';
+                break;
+            case 'Prior Authorization':
+                className = 'priorauth';
+                break;
+            default:
+                break;
+            }
+
+            $('.nav li').removeClass('active');
+            $('.nav li.' + className).addClass('active');
+        },
+
         //
         // Route methods
         //
@@ -97,60 +120,70 @@ define([
         index: function () {
             this.activeView.close();
             this.activeView = new DefaultView({ el: this.el });
+            this.highlightNavigation('Home');
         },
 
         // Display all patients
         patients: function () {
             this.activeView.close();
             this.activeView = new PatientListView({ el: this.el, patientsCollection: this.patientsCollection });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Show details of a specific patient
         showPatient: function (id) {
             this.activeView.close();
             this.activeView = new PatientShowView({ el: this.el, patientId: id, patientsCollection: this.patientsCollection });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Create a new patient entry
         newPatient: function () {
             this.activeView.close();
             this.activeView = new PatientAddView({ el: this.el, patientsCollection: this.patientsCollection });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Create a new prescription for a patient
         newDrug: function (patientId) {
             this.activeView.close();
             this.activeView = new RequestAddEPrescribeView({ el: this.el, patientsCollection: this.patientsCollection, patientId: patientId });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Edit a prescription for a patient
         editDrug: function (patientId, requestId) {
             this.activeView.close();
             this.activeView = new RequestAddEPrescribeView({ el: this.el, patientsCollection: this.patientsCollection, patientId: patientId, requestId: requestId });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Show a list of pharmacies for a patient's prescriptions
         showPharmacies: function (patientId) {
             this.activeView.close();
             this.activeView = new PharmaciesListView({ el: this.el, patientId: patientId });
+            this.highlightNavigation('e-Prescribing');
         },
 
         // Show all previously-created prescriptions/PA requests
         dashboard: function () {
             this.activeView.close();
             this.activeView = new RequestListView({ el: this.el });
+            this.highlightNavigation('Prior Authorization');
         },
 
         // Add a standalone prescription/PA request
         newRequest: function () {
             this.activeView.close();
             this.activeView = new RequestAddPriorAuthView({ el: this.el });
+            this.highlightNavigation('Prior Authorization');
         },
 
         // Display a "help!" page
         help: function () {
             this.activeView.close();
             this.activeView = new HelpView({ el: this.el });
+            this.highlightNavigation('Prior Authorization');
         }
     });
 
