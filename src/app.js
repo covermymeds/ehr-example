@@ -6,6 +6,7 @@ define([
     'underscore',
     'backbone',
     'views/default',
+    'views/navigation',
     'views/patients/list',
     'views/patients/add',
     'views/patients/show',
@@ -14,13 +15,12 @@ define([
     'views/requests/add-priorauth',
     'views/pharmacies/list',
     'collections/patients',
+    'models/patient',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'select2'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, navigationTemplate) {
-    var app,
-        AppController;
+], function ($, Bootstrap, _, Backbone, DefaultView, NavigationView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, PatientModel, navigationTemplate) {
 
     // Extend Backbone
     Backbone.View.prototype.close = function () {
@@ -44,79 +44,116 @@ define([
         return JSON.parse(localStorage.getItem(key));
     };
 
-    // App
-    AppController = Backbone.View.extend({
-        events: {
-            'click .nav a': 'navigation'
+    // Handle matching routes to "controller" methods
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+          '': 'index',
+          'patients': 'patients',
+          'patients/new': 'newPatient',
+          'patients/:id': 'showPatient',
+          'patients/:id/drugs/new': 'newDrug',
+          'patients/:id/drugs/:id/edit': 'editDrug',
+          'patients/:id/pharmacies': 'showPharmacies',
+          'dashboard': 'dashboard',
+          'requests/new': 'newRequest',
+          'help': 'help'
         },
 
         initialize: function () {
-            _.bindAll(this, 'changeView', 'navigation');
+            // Create navigation
+            var nav = new NavigationView({ el: $('#app') });
 
-            this.elem = $(navigationTemplate);
-            this.render();
-
+            // Create initial subview
             this.el = $('#page-load-target');
+            this.activeView = new DefaultView({ el: this.el });
 
+            // Initialize collection of previously-saved patients
             this.patientsCollection = new PatientsCollection();
-            this.patientsCollection.fetch();
+            this.patientsCollection.fetch({
+                success: function (collection) {
+                    // Create some example patients the first time the app is loaded
+                    var patient,
+                        names;
 
-            this.views = {
-                index: DefaultView,
-                patientList: PatientListView,
-                patientAdd: PatientAddView,
-                patientShow: PatientShowView,
-                requestList: RequestListView,
-                requestAddEPrescribe: RequestAddEPrescribeView,
-                requestAddPriorAuth: RequestAddPriorAuthView,
-                pharmaciesList: PharmaciesListView
-            };
+                    names = ['Nathan', 'Ryan', 'Larry', 'Mike', 'Mark', 'Becky', 'Suzy', 'Amanda', 'Amber'];
 
-            this.activeView = new this.views.index({ el: this.el });
+                    while (collection.length < 10) {
+                        patient = new PatientModel({
+                            first_name: _.sample(names),
+                            last_name: _.sample(names)
+                        });
+                        collection.add(patient);
+                        patient.save();
+                    }
+                }
+            });
         },
 
-        changeView: function (view, options) {
-            options = _.extend(options || {}, { el: this.el });
+        //
+        // Route methods
+        //
 
-            if (this.views[view] !== undefined) {
-                this.activeView.off('view:change');
-                this.activeView.close();
-
-                this.activeView = new this.views[view](options);
-                this.activeView.on('view:change', this.changeView);
-            } else {
-                alert('That view has not been defined!');
-            }
+        // Placeholder page with some basic information
+        index: function () {
+            this.activeView.close();
+            this.activeView = new DefaultView({ el: this.el });
         },
 
-        navigation: function (event) {
-            var view,
-                options;
+        // Display all patients
+        patients: function () {
+            this.activeView.close();
+            this.activeView = new PatientListView({ el: this.el, patientsCollection: this.patientsCollection });
+        },
 
-            view = $(event.target).attr('href');
-            event.preventDefault();
+        // Show details of a specific patient
+        showPatient: function (id) {
+            this.activeView.close();
+            this.activeView = new PatientShowView({ el: this.el, patientId: id, patientsCollection: this.patientsCollection });
+        },
 
-            if (view === '#') {
-                return;
-            }
+        // Create a new patient entry
+        newPatient: function () {
+            this.activeView.close();
+            this.activeView = new PatientAddView({ el: this.el, patientsCollection: this.patientsCollection });
+        },
 
-            switch (view) {
-            case 'requestAdd':
-            case 'patientList':
-                options = { patientsCollection: this.patientsCollection };
-                break;
-            default:
-                options = {};
-                break;
-            }
+        // Create a new prescription for a patient
+        newDrug: function (patientId) {
+            this.activeView.close();
+            this.activeView = new RequestAddEPrescribeView({ el: this.el, patientsCollection: this.patientsCollection, patientId: patientId });
+        },
 
-            this.changeView(view, options);
+        // Edit a prescription for a patient
+        editDrug: function (patientId, requestId) {
+            this.activeView.close();
+            this.activeView = new RequestAddEPrescribeView({ el: this.el, patientsCollection: this.patientsCollection, patientId: patientId, requestId: requestId });
+        },
 
-            // Update navigation highlight state
-            this.$('.nav li').removeClass('active');
-            this.$(event.target).parents('li').addClass('active');
+        // Show a list of pharmacies for a patient's prescriptions
+        showPharmacies: function (patientId) {
+            this.activeView.close();
+            this.activeView = new PharmaciesListView({ el: this.el, patientId: patientId });
+        },
+
+        // Show all previously-created prescriptions/PA requests
+        dashboard: function () {
+            this.activeView.close();
+            this.activeView = new RequestListView({ el: this.el });
+        },
+
+        // Add a standalone prescription/PA request
+        newRequest: function () {
+            this.activeView.close();
+            this.activeView = new RequestAddPriorAuthView({ el: this.el });
+        },
+
+        // Display a "help!" page
+        help: function () {
+            this.activeView.close();
+            this.activeView = new HelpView({ el: this.el });
         }
     });
 
-    app = new AppController({ el: $('#app') });
+    window.app = new AppRouter();
+    Backbone.history.start();
 });

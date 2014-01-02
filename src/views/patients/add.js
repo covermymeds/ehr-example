@@ -10,15 +10,12 @@ define([
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel',
             'click .create': 'create'
         },
 
         template: _.template(template),
 
         initialize: function (options) {
-            options = options || {};
-
             this.el = options.el;
             this.patientsCollection = options.patientsCollection;
 
@@ -39,17 +36,8 @@ define([
 
             patient.save();
 
-
-            // Clear out form
-            this.$('input').val('');
-            this.$('select').val('');
-
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection, patient: patient });
+            window.app.navigate('patients', { trigger: true });
         },
-
-        cancel: function (event) {
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
-        }
     });
 
 });
