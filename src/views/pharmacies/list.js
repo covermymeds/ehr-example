@@ -24,7 +24,7 @@ define([
             this.patientsCollection = options.patientsCollection;
             this.patientId = options.patientId;
 
-            this.elem = $(this.template({ pharmacies: ['Kroger', 'CVS', 'Walgreens', 'Walmart', 'Target'] }));
+            this.elem = $(this.template({ pharmacies: ['Kroger', 'CVS', 'Walgreens', 'Walmart', 'Target'], patientId: this.patientId }));
             this.render();
 
             $('.dt').dataTable({
@@ -35,7 +35,7 @@ define([
 
         finish: function (event) {
             event.preventDefault();
-            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
+            window.app.navigate('patients/' + this.patientId, { trigger: true });
         }
     });
 

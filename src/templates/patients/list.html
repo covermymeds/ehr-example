@@ -1,6 +1,6 @@
 <div id="patients-list" class="template">
   <h1>Patients
-  <button class="btn btn-small btn-success add">Add patient</button>
+  <a href="#/patients/new" class="btn btn-small btn-success">Add patient</a>
   </h1>
 
   <% if (patientsCollection.length < 1) { %>
@@ -9,7 +9,7 @@
 
   <div class="list-group">
   <% patientsCollection.each(function (patient) { %>
-    <a href="#" data-id="<%= patient.id %>" class="list-group-item patient"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
+    <a href="#/patients/<%= patient.id %>" class="list-group-item"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
   <% }); %>
   </div>
 </div>

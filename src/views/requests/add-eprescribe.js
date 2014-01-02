@@ -10,7 +10,6 @@ define([
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel',
             'click .create': 'createRequest'
         },
         template: _.template(template),
@@ -73,13 +72,10 @@ define([
                 this.patient.get('requestsCollection').add(requestModel);
             }
 
-            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
-        },
+            this.patient.save();
 
-        cancel: function (event) {
-            event.preventDefault();
-            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
-        }
+            window.app.navigate('patients/' + this.patientId, { trigger: true });
+        },
     });
 
 });

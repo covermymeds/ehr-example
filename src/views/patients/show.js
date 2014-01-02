@@ -101,7 +101,7 @@ define([
 
                         // Transfer to new view if all requests were successful
                         if (count === total) {
-                            self.trigger('view:change', 'pharmaciesList', { patientsCollection: self.patientsCollection, patientId: self.patientId });
+                            window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     },
                     error: function (data) {
@@ -114,7 +114,7 @@ define([
                         // Transfer to new view if all requests were successful
                         if (count === total) {
                             alert('There was an error creating one of your prescriptions. Please try again.');
-                            self.trigger('view:change', 'pharmaciesList', { patientsCollection: self.patientsCollection, patientId: self.patientId });
+                            window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     }
                 });
