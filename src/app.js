@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true, unparam: true */
-/*global define: false */
+/*global define: false, Storage: false, localStorage: false */
 define([
     'jquery',
     'bootstrap',
@@ -12,15 +12,17 @@ define([
     'views/requests/list',
     'views/requests/add-eprescribe',
     'views/requests/add-priorauth',
+    'views/pharmacies/list',
     'collections/patients',
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
     'select2'
-], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PatientsCollection, navigationTemplate) {
+], function ($, Bootstrap, _, Backbone, DefaultView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, PatientsCollection, navigationTemplate) {
     var app,
         AppController;
 
+    // Extend Backbone
     Backbone.View.prototype.close = function () {
         if (typeof this.onClose === "function") {
             this.onClose();
@@ -49,9 +51,6 @@ define([
         },
 
         initialize: function () {
-            var el,
-                key;
-
             _.bindAll(this, 'changeView', 'navigation');
 
             this.elem = $(navigationTemplate);
@@ -69,7 +68,8 @@ define([
                 patientShow: PatientShowView,
                 requestList: RequestListView,
                 requestAddEPrescribe: RequestAddEPrescribeView,
-                requestAddPriorAuth: RequestAddPriorAuthView
+                requestAddPriorAuth: RequestAddPriorAuthView,
+                pharmaciesList: PharmaciesListView
             };
 
             this.activeView = new this.views.index({ el: this.el });
@@ -84,6 +84,8 @@ define([
 
                 this.activeView = new this.views[view](options);
                 this.activeView.on('view:change', this.changeView);
+            } else {
+                alert('That view has not been defined!');
             }
         },
 
@@ -101,7 +103,7 @@ define([
             switch (view) {
             case 'requestAdd':
             case 'patientList':
-                options = { patientsCollection: this.patientsCollection }
+                options = { patientsCollection: this.patientsCollection };
                 break;
             default:
                 options = {};

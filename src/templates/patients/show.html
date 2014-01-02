@@ -1,25 +1,40 @@
 <div id="patient-show" class="template">
-  <h3><%= patient.get('first_name') %> <%= patient.get('last_name') %></h3>
-  <hr />
+  <h2><%= patient.get('last_name') %>, <%= patient.get('first_name') %></h2>
 
-  <h4>PA Requests</h4>
+  <hr>
 
+  <h3>Prescriptions</h3>
+
+  <% var requests = patient.get('requestsCollection'); %>
+
+  <% if (requests.length < 1) { %>
+  <h5>No drugs have been added for this patient yet.</h5>
+  <% } else { %>
   <table class="table">
     <thead>
       <tr>
         <th>Drug</th>
         <th>Form</th>
-        <th></th>
+        <th>&nbsp;</th>
+        <th class="pull-right">Submit</th>
       </tr>
     </thead>
-    <% patient.get('requestsCollection').each(function(request) { %>
+    <% requests.each(function(request) { %>
       <tr>
-        <td>Drug ID: <%= request.get('prescription.drug_id') %></td>
-        <td>Form ID: <%= request.get('form_id') %></td>
-        <td><button class="btn btn-primary pull-right start" data-request-id="<%= request.cid %>">Start</button></td>
+        <td><%= request.get('drugName') %></td>
+        <td><%= request.get('formName') %></td>
+        <td><button class="btn pull-right edit" data-request-id="<%= request.cid %>">Change Drug</button></td>
+        <td><input type="checkbox" name="request" class="pull-right" value="<%= request.cid %>"></td>
       </tr>
     <% }); %>
   </table>
+  <% } %>
 
-  <button class="btn btn-success add">Add PA Request</button>
+  <p>
+    <button class="btn btn-success add">Add Prescription</button>
+    <% if (requests.length > 0) { %>
+    <button class="btn btn-primary submit">Submit Selected</button>
+    <% } %>
+  </p>
+
 </div>
