@@ -9,6 +9,5 @@
   6. View "help" page
 
 * Either fix grunt-jasmine or get rid of it
-* Figure out why request creating isn't working anymore
-* Make "help" view
-* Add sample data - e.g. 10 sample users
+* Add datepicker to patient dob fields
+* Add "delete patient" button
