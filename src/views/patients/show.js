@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false, localStorage: false, alert: true */
+/*global window: false, define: false, localStorage: false, alert: true */
 define([
     'jquery',
     'underscore',
@@ -64,14 +64,16 @@ define([
             // Create a PA request for each checked checkbox
             this.$('input[name="request"]:checked').each(function (index, checkbox) {
                 var requestId,
-                    request;
+                    requestModel,
+                    requestData;
 
                 requestId = $(checkbox).val();
-                request = self.patient.get('requestsCollection').get(requestId).get('request');
+                requestModel = self.patient.get('requestsCollection').get(requestId);
+                requestData = requestModel.get('request');
 
                 button.createRequest({
                     staging: true,
-                    data: { request: request },
+                    data: { request: requestData },
                     success: function (data) {
                         var id,
                             savedIds,
@@ -79,12 +81,12 @@ define([
 
                         // Persist the request ID locally
                         id = data.request.id;
-                        request.save('id', id);
+                        requestModel.save('id', id);
 
                         // Add the new request ID to localstorage, so we can view
                         // it in our dashboard
                         savedIds = localStorage.getObject('ids') || [];
-                        savedIds.push();
+                        savedIds.push(id);
                         localStorage.setObject('ids', savedIds);
 
                         // Hide the "change drug" button and disable the
@@ -101,11 +103,11 @@ define([
 
                         // Transfer to new view if all requests were successful
                         if (count === total) {
-                            this.flash('success', 'We have started ' + count + ' prior authorizations. You may view them <a href="#dashboard">here</a>.');
+                            self.flash('success', 'We have started ' + count + ' prior authorization(s). You may view them <a href="#dashboard">here</a>.');
                             window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     },
-                    error: function (data) {
+                    error: function () {
                         // Remove temporary button
                         button.remove();
 
@@ -114,7 +116,7 @@ define([
 
                         // Transfer to new view if all requests were successful
                         if (count === total) {
-                            this.flash('danger', 'There was a problem creating one or more of your prescriptions. Please try again.');
+                            self.flash('danger', 'There was a problem creating one or more of your prescriptions. Please try again.');
                             window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     }

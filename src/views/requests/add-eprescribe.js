@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global window: false, define: false */
 define([
     'jquery',
     'underscore',
@@ -55,6 +55,7 @@ define([
                         drug_id: this.$('input[name="request[drug_id]"]').val()
                     },
                     form_id: this.$('input[name="request[form_id]"]').val(),
+                    state: this.$('select[name="request[state]"]').val(),
                     patient: {
                         first_name: this.$('input[name="request[patient][first_name]"]').val(),
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
@@ -77,7 +78,7 @@ define([
             this.patient.save();
 
             window.app.navigate('patients/' + this.patientId, { trigger: true });
-        },
+        }
     });
 
 });
