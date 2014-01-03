@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global window: false, define: false */
 define([
     'jquery',
     'underscore',
@@ -24,6 +24,8 @@ define([
         },
 
         create: function (event) {
+            event.preventDefault();
+
             // Add patient
             var patient = new Patient({
                 first_name: this.$('input[name="patient[first_name]"]').val(),
@@ -36,8 +38,9 @@ define([
 
             patient.save();
 
+            this.flash('success', 'Patient created successfully.');
             window.app.navigate('patients', { trigger: true });
-        },
+        }
     });
 
 });

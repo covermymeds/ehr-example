@@ -1,4 +1,4 @@
-js-dashboard
+EHR Example
 ============
 
 Example e-prescribing/dashboard app.
