@@ -11,3 +11,4 @@
 * Either fix grunt-jasmine or get rid of it
 * Add datepicker to patient dob fields
 * Add "delete patient" button
+* Grey out checkbox for "sent" requests
