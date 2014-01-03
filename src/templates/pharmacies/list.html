@@ -1,0 +1,29 @@
+<div id="pharmacies-list" class="template">
+  <h1>Pharmacies</h1>
+
+  <% if (pharmacies.length < 1) { %>
+  <h2>No Pharmacies</h2>
+  <% } %>
+
+  <table class="table table-striped dt">
+    <thead>
+      <tr>
+        <th>Pharmacy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% _.each(pharmacies, function (pharmacy, index) { %>
+        <tr>
+          <td>
+            <label for="<%= index %>">
+              <input type="radio" id="<%= index %>" name="pharmacies" value="<%= pharmacy %>"> <%= pharmacy %>
+            </label>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <a href="#/patients/<%= patientId %>" class="btn">Cancel</a>
+  <button class="finish btn btn-primary">Finish</button>
+</div>

@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global window: false, define: false */
 define([
     'jquery',
     'underscore',
@@ -10,15 +10,12 @@ define([
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel',
             'click .create': 'create'
         },
 
         template: _.template(template),
 
         initialize: function (options) {
-            options = options || {};
-
             this.el = options.el;
             this.patientsCollection = options.patientsCollection;
 
@@ -27,6 +24,8 @@ define([
         },
 
         create: function (event) {
+            event.preventDefault();
+
             // Add patient
             var patient = new Patient({
                 first_name: this.$('input[name="patient[first_name]"]').val(),
@@ -37,19 +36,10 @@ define([
 
             this.patientsCollection.add(patient);
 
-            // TODO: Get this working with localStorage Backbone.js plugin
             patient.save();
 
-
-            // Clear out form
-            this.$('input').val('');
-            this.$('select').val('');
-
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection, patient: patient });
-        },
-
-        cancel: function (event) {
-            this.trigger('view:change', 'patientList', { patientsCollection: this.patientsCollection });
+            this.flash('success', 'Patient created successfully.');
+            window.app.navigate('patients', { trigger: true });
         }
     });
 

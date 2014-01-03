@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global define: false */
+/*global window: false, define: false */
 define([
     'jquery',
     'underscore',
@@ -10,20 +10,17 @@ define([
 
     return Backbone.View.extend({
         events: {
-            'click .cancel': 'cancel',
             'click .create': 'createRequest'
         },
         template: _.template(template),
 
         /* Constructor */
         initialize: function (options) {
-            if (options.patientsCollection !== undefined) {
-                this.patientsCollection = options.patientsCollection;
-            }
+            var requestModel;
 
-            if (options.patientId !== undefined) {
-                this.patientId = options.patientId;
-            }
+            this.patientsCollection = options.patientsCollection;
+            this.patientId = options.patientId;
+            this.requestId = options.requestId;
 
             this.patient = this.patientsCollection.get(this.patientId);
             this.elem = $(this.template({ patient: this.patient }));
@@ -31,6 +28,13 @@ define([
 
             $('#drug').drugSearch();
             $('#form').formSearch();
+
+            // Fill in values to "edit" a request
+            if (this.requestId !== undefined) {
+                requestModel = this.patientsCollection.get(this.patientId).get('requestsCollection').get(this.requestId);
+                $('#drug').select2("data", { id: requestModel.get('request').prescription.drug_id, text: requestModel.get('drugName') });
+                $('#form').select2("data", { id: requestModel.get('request').form_id, text: requestModel.get('formName') });
+            }
         },
 
         /* Remove custom event handlers/plugins */
@@ -40,10 +44,18 @@ define([
         },
 
         createRequest: function () {
-            var request = new RequestModel({
+            var requestModel,
+                data;
+
+            data = {
+                formName: this.$('input[name="request[form_id]"]').select2('data').text,
+                drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
                 request: {
-                    drug_id: this.$('input[name="request[drug_id]"]').val(),
+                    prescription: {
+                        drug_id: this.$('input[name="request[drug_id]"]').val()
+                    },
                     form_id: this.$('input[name="request[form_id]"]').val(),
+                    state: this.$('select[name="request[state]"]').val(),
                     patient: {
                         first_name: this.$('input[name="request[patient][first_name]"]').val(),
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
@@ -56,15 +68,21 @@ define([
                         dispense_as_written: this.$('input[name="request[prescription][dispense_as_written]"]').val()
                     }
                 }
-            });
+            };
 
-            this.patient.get('requestsCollection').add(request);
-            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
-        },
+            if (this.requestId !== undefined) {
+                requestModel = this.patient.get('requestsCollection').get(this.requestId);
+                requestModel.save(data);
+                this.flash('success', 'Prescription updated successfully.');
+            } else {
+                requestModel = new RequestModel(data);
+                this.patient.get('requestsCollection').add(requestModel);
+                this.flash('success', 'Prescription created successfully.');
+            }
 
-        cancel: function (event) {
-            event.preventDefault();
-            this.trigger('view:change', 'patientShow', { patientId: this.patientId, patientsCollection: this.patientsCollection });
+            this.patient.save();
+
+            window.app.navigate('patients/' + this.patientId, { trigger: true });
         }
     });
 
