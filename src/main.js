@@ -11,7 +11,8 @@ require({
         cmmconfig: '../lib/config',
         select2: '../lib/select2.min',
         datatables: '../lib/jquery.dataTables.min',
-        datatablesbootstrap: '../lib/datatables.bootstrap'
+        datatablesbootstrap: '../lib/datatables.bootstrap',
+        bootstrapDatepicker: '../lib/bootstrap-datepicker'
     },
     shim: {
         datatables: {
@@ -27,10 +28,13 @@ require({
             deps: ['bootstrap']
         },
         localstorage: {
-            deps: ['underscore', 'backbone'],
+            deps: ['underscore', 'backbone']
         },
         bootstrap: {
             deps: ['jquery']
+        },
+        bootstrapDatepicker: {
+            deps: ['bootstrap']
         },
         underscore: {
             exports: '_'

@@ -21,6 +21,16 @@ define([
 
             this.elem = $(this.template({ patientsCollection: this.patientsCollection }));
             this.render();
+
+            var datepicker = $('#date_of_birth').datepicker({
+                format: 'mm/dd/yyyy'
+            }).on('changeDate', function (ev) {
+                datepicker.hide();
+            }).data('datepicker');
+        },
+
+        onClose: function () {
+            $('#date_of_birth').off();
         },
 
         create: function (event) {

@@ -9,6 +9,30 @@
   6. View "help" page
 
 * Either fix grunt-jasmine or get rid of it
+
 * Add datepicker to patient dob fields
 * Add "delete patient" button
 * Grey out checkbox for "sent" requests
+* Pagination for Dashboard
+
+number_of_pages = Math.floor(results / results_per_page)
+
+to_template = results.slice(current_page * results_per_page,
+results_per_page)
+
+43
+
+results.slice(40, 10) = 3 results
+
+var requests = '';
+$.ajax({
+  success: function (data) {
+    requests = data;  
+    
+    // Draw html here
+    // Draw nav links here
+    // Write pagination event handlers here
+  }
+})
+
+

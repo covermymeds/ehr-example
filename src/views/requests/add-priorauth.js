@@ -47,10 +47,17 @@ define([
                     self.alert('danger', 'There was a problem creating your prescription, please try again');
                 }
             });
+
+            var datepicker = this.$('#date_of_birth').datepicker({
+                format: 'mm/dd/yyyy'
+            }).on('changeDate', function (ev) {
+                datepicker.hide();
+            }).data('datepicker');
         },
 
         /* Remove custom event handlers/plugins */
         onClose: function () {
+            this.$('#date_of_birth').off();
             this.$('#drug').drugSearch('destroy');
             this.$('#form').formSearch('destroy');
             this.$('#create').createRequest('destroy');

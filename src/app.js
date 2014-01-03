@@ -20,7 +20,8 @@ define([
     'text!templates/navigation.html',
     'cmmplugins',
     'cmmconfig',
-    'select2'
+    'select2',
+    'bootstrapDatepicker'
 ], function ($, Bootstrap, _, Backbone, DefaultView, NavigationView, PatientListView, PatientAddView, PatientShowView, RequestListView, RequestAddEPrescribeView, RequestAddPriorAuthView, PharmaciesListView, HelpView, PatientsCollection, PatientModel, navigationTemplate) {
 
     // Extend Backbone
