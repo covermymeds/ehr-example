@@ -23,8 +23,12 @@
       <tr>
         <td><%= request.get('drugName') %></td>
         <td><%= request.get('formName') %></td>
-        <td><a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary pull-right" data-request-id="<%= request.cid %>">Change Drug</button></td>
+        <td><a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary pull-right">Change Drug</button></td>
+        <% if (request.get('sent') === true) { %>
+        <td><input type="checkbox" class="pull-right" checked="checked" disabled="disabled"></td>
+        <% } else { %>
         <td><input type="checkbox" name="request" class="pull-right" value="<%= request.cid %>"></td>
+        <% } %>
       </tr>
     <% }); %>
   </table>
