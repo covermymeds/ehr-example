@@ -10,7 +10,8 @@ define([
     return Backbone.View.extend({
         events: {
             'click .add': 'addPatient',
-            'click .patient': 'showPatient'
+            'click .patient': 'showPatient',
+            'click .destroy': 'destroyPatient'
         },
         template: _.template(template),
 

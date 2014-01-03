@@ -31,7 +31,20 @@ define([
 
             // Fill in values to "edit" a request
             if (this.requestId !== undefined) {
+                var prescription,
+                    quantity,
+                    frequency,
+                    refills,
+                    dispenseAsWritten;
+
                 requestModel = this.patientsCollection.get(this.patientId).get('requestsCollection').get(this.requestId);
+                prescription = requestModel.get('request').prescription;
+
+                quantity = this.$('input[name="request[prescription][quantity]"]').val(prescription.quantity);
+                frequency = this.$('input[name="request[prescription][frequency]"]').val(prescription.frequency);
+                refills = this.$('select[name="request[prescription][refills]"]').val(prescription.refills);
+                dispenseAsWritten = this.$('input[name="request[prescription][dispense_as_written]"]').attr('checked', prescription.dispense_as_written === '' ? false : true);
+
                 $('#drug').select2("data", { id: requestModel.get('request').prescription.drug_id, text: requestModel.get('drugName') });
                 $('#form').select2("data", { id: requestModel.get('request').form_id, text: requestModel.get('formName') });
             }

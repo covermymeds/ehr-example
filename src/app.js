@@ -83,6 +83,7 @@ define([
             'patients/:id/drugs/new': 'newDrug',
             'patients/:id/drugs/:id/edit': 'editDrug',
             'patients/:id/pharmacies': 'showPharmacies',
+            'patients/:id/destroy': 'destroyPatient',
             'dashboard': 'dashboard',
             'requests/new': 'newRequest',
             'help': 'help'
@@ -106,13 +107,15 @@ define([
 
                     names = ['Nathan', 'Ryan', 'Larry', 'Mike', 'Mark', 'Becky', 'Suzy', 'Amanda', 'Amber'];
 
-                    while (collection.length < 10) {
-                        patient = new PatientModel({
-                            first_name: _.sample(names),
-                            last_name: _.sample(names)
-                        });
-                        collection.add(patient);
-                        patient.save();
+                    if (collection.length === 0) {
+                        while (collection.length < 10) {
+                            patient = new PatientModel({
+                                first_name: _.sample(names),
+                                last_name: _.sample(names)
+                            });
+                            collection.add(patient);
+                            patient.save();
+                        }
                     }
                 }
             });
@@ -170,6 +173,26 @@ define([
             this.activeView.close();
             this.activeView = new PatientAddView({ el: this.el, patientsCollection: this.patientsCollection });
             this.highlightNavigation('e-Prescribing');
+        },
+
+        // Remove a patient entry
+        destroyPatient: function (patientId) {
+            var self = this;
+
+            this.patientsCollection.get(patientId).destroy({
+                success: function () {
+                    _.defer(function () {
+                        self.activeView.flash('success', 'Patient removed successfully.');
+                        window.app.navigate('patients', { trigger: true });
+                    });
+                },
+                error: function () {
+                    _.defer(function () {
+                        self.activeView.flash('danger', 'There was a problem removing that patient. Please try again.');
+                        window.app.navigate('patients', { trigger: true });
+                    });
+                }
+            });
         },
 
         // Create a new prescription for a patient
