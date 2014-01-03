@@ -7,9 +7,15 @@
   <h2>No Patients</h2>
   <% } %>
 
-  <div class="list-group">
+  <ul class="list-group">
   <% patientsCollection.each(function (patient) { %>
-    <a href="#/patients/<%= patient.id %>" class="list-group-item"><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</a>
+  <li class="list-group-item">
+  <a href="#/patients/<%= patient.id %>">
+    <%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)
+  </a>
+  <a href="#/patients/<%= patient.id %>/destroy" class="btn btn-xs
+    btn-danger pull-right">Remove</a>
+  </li>
   <% }); %>
-  </div>
+  </ul>
 </div>

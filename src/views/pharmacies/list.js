@@ -35,7 +35,7 @@ define([
 
         finish: function (event) {
             event.preventDefault();
-            window.app.navigate('patients/' + this.patientId, { trigger: true });
+            window.app.navigate('', { trigger: true });
         }
     });
 

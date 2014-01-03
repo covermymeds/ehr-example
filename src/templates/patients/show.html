@@ -16,7 +16,7 @@
         <th>Drug</th>
         <th>Form</th>
         <th>&nbsp;</th>
-        <th class="pull-right">Submit</th>
+        <th class="pull-right">Start PA</th>
       </tr>
     </thead>
     <% requests.each(function(request) { %>
@@ -35,9 +35,9 @@
   <% } %>
 
   <p>
-    <a href="#/patients/<%= patient.id %>/drugs/new" class="btn btn-success">Add Prescription</a>
+    <a href="#/patients/<%= patient.id %>/drugs/new" class="btn btn-success">Add Drugs</a>
     <% if (requests.length > 0) { %>
-    <button class="btn btn-primary submit">Submit Selected</button>
+    <button class="btn btn-primary submit">Next</button>
     <% } %>
   </p>
 
