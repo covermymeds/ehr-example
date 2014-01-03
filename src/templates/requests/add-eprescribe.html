@@ -1,6 +1,7 @@
 <div id="request-add" class="template">
+  <h3>New Prescription</h3>
 	<fieldset>
-		<legend>New PA Request</legend>
+    <legend><%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)</legend>
 
 		<input type="hidden" id="first_name" name="request[patient][first_name]" value="<%= patient.get('first_name') %>">
 		<input type="hidden" id="last_name" name="request[patient][last_name]" value="<%= patient.get('last_name') %>">
@@ -18,6 +19,45 @@
 			<label for="form">Form</label>
 			<input class="form-control" id="form" name="request[form_id]">
 		</p>
+
+		<p>
+			<label for="quantity">Quantity</label>
+			<input class="form-control" name="request[prescription][quantity]">
+		</p>
+
+    <p>
+      <label for="directions">Directions</label>
+      <select name="request[prescription][frequency]" class="form-control">
+        <option value="">Directions / Sig</option>
+        <option value="qD">qD - EVERY DAY</option>
+        <option value="BID">BID - TWICE A DAY</option>
+        <option value="TID">TID - THREE A DAY</option>
+        <option value="QID">QID - FOUR A DAY</option>
+        <option value="PRN">PRN - AS NEEDED</option>
+        <option value="UD">UD - AS DIRECTED</option>
+      </select>
+    </p>
+
+    <p>
+      <label for="refills">Refills</label>
+      <select name="request[prescription][refills]" class="form-control">
+        <option value="">Refills</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+    </p>
+
+    <p>
+      <label>
+        Dispense as written
+        <input type="checkbox" name="request[prescription][dispense_as_written]" id="yes" value="yes">
+      </label>
+    </p>
 
 		<p>
 			<a href="#/patients/<%= patient.id %>" class="btn btn-default">Cancel</a>

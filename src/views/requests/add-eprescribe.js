@@ -51,9 +51,6 @@ define([
                 formName: this.$('input[name="request[form_id]"]').select2('data').text,
                 drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
                 request: {
-                    prescription: {
-                        drug_id: this.$('input[name="request[drug_id]"]').val()
-                    },
                     form_id: this.$('input[name="request[form_id]"]').val(),
                     state: this.$('select[name="request[state]"]').val(),
                     patient: {
@@ -61,6 +58,13 @@ define([
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
                         date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
                         state: this.$('select[name="request[state]"]').val()
+                    },
+                    prescription: {
+                        drug_id: this.$('input[name="request[drug_id]"]').val(),
+                        refills: this.$('select[name="request[prescription][refills]"]').val(),
+                        quantity: this.$('input[name="request[prescription][quantity]"]').val(),
+                        dispense_as_written: this.$('input[name="request[prescription][dispense_as_written]"]').val(),
+                        frequency: this.$('input[name="request[prescription][frequency]"]').val()
                     }
                 }
             };
