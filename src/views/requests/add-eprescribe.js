@@ -67,9 +67,11 @@ define([
             if (this.requestId !== undefined) {
                 requestModel = this.patient.get('requestsCollection').get(this.requestId);
                 requestModel.save(data);
+                this.flash('success', 'Prescription updated successfully.');
             } else {
                 requestModel = new RequestModel(data);
                 this.patient.get('requestsCollection').add(requestModel);
+                this.flash('success', 'Prescription created successfully.');
             }
 
             this.patient.save();

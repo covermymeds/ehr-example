@@ -101,6 +101,7 @@ define([
 
                         // Transfer to new view if all requests were successful
                         if (count === total) {
+                            this.flash('success', 'We have started ' + count + ' prior authorizations. You may view them <a href="#dashboard">here</a>.');
                             window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     },
@@ -113,7 +114,7 @@ define([
 
                         // Transfer to new view if all requests were successful
                         if (count === total) {
-                            alert('There was an error creating one of your prescriptions. Please try again.');
+                            this.flash('danger', 'There was a problem creating one or more of your prescriptions. Please try again.');
                             window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
                         }
                     }
