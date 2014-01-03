@@ -79,12 +79,16 @@ define([
                             savedIds,
                             row;
 
-                        // Persist the request ID locally
-                        id = data.request.id;
-                        requestModel.save('id', id);
+                        // Persist data locally
+                        requestModel.save({
+                            request: data.request,
+                            sent: true
+                        });
 
-                        // Add the new request ID to localstorage, so we can view
-                        // it in our dashboard
+                        self.patient.save();
+
+                        // Add the new request ID to localstorage, so we can view it in our dashboard
+                        id = data.request.id;
                         savedIds = localStorage.getObject('ids') || [];
                         savedIds.push(id);
                         localStorage.setObject('ids', savedIds);

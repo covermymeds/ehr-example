@@ -6,6 +6,7 @@ define([
 
     return Backbone.Model.extend({
         defaults: {
+            "sent": false,
             "request": {
                 "urgent": "",
                 "form_id": "",

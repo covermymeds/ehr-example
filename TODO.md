@@ -15,12 +15,8 @@
 * Pagination for Dashboard
 
 number_of_pages = Math.floor(results / results_per_page)
-
 to_template = results.slice(current_page * results_per_page,
 results_per_page)
-
-43
-
 results.slice(40, 10) = 3 results
 
 var requests = '';
@@ -33,5 +29,3 @@ $.ajax({
     // Write pagination event handlers here
   }
 })
-
-
