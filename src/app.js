@@ -89,6 +89,9 @@ define([
         },
 
         initialize: function () {
+            // Clear out any previous flash messages
+            localStorage.setObject('flash', null);
+
             // Create navigation
             var nav = new NavigationView({ el: $('#app') });
 
@@ -159,9 +162,16 @@ define([
         },
 
         // Show details of a specific patient
-        showPatient: function (id) {
+        showPatient: function (patientId) {
+            // If patient has no drugs, forward on immediately to "Add drug" view
+            var patient = this.patientsCollection.get(patientId);
+            if (patient.get('requestsCollection').length === 0) {
+                window.app.navigate('/patients/' + patientId + '/drugs/new', { trigger: true, replace: true });
+                return;
+            }
+
             this.activeView.close();
-            this.activeView = new PatientShowView({ el: this.el, patientId: id, patientsCollection: this.patientsCollection });
+            this.activeView = new PatientShowView({ el: this.el, patientId: patientId, patientsCollection: this.patientsCollection });
             this.highlightNavigation('e-Prescribing');
         },
 
