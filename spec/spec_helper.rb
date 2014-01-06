@@ -3,10 +3,20 @@ require File.expand_path '../../server.rb', __FILE__
 
 require 'rspec'
 require 'rack/test'
+require 'capybara'
+require 'capybara/dsl'
+require 'capybara/rspec'
+require 'capybara-webkit'
 
 module RSpecMixin
   include Rack::Test::Methods
   def app() Sinatra::Application end
 end
 
-RSpec.configure { |c| c.include RSpecMixin }
+Capybara.app = Sinatra::Application
+Capybara.javascript_driver = :webkit
+
+RSpec.configure do |config|
+  config.include RSpecMixin
+  config.include Capybara::DSL
+end
