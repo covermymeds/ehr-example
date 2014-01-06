@@ -9,9 +9,6 @@
   6. View "help" page
 
 * Either fix grunt-jasmine or get rid of it
-
-* Add "delete patient" button
-* Grey out checkbox for "sent" requests
 * Pagination for Dashboard
 
 number_of_pages = Math.floor(results / results_per_page)
