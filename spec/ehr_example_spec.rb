@@ -68,10 +68,6 @@ describe 'eHR Example App' do
       page.should have_content('New Prescription')
     end
 
-    it 'should navigate patient show if patient name is clicked and patient has prescription assigned', js: true do
-      # TODO: Create a test for this - needs setup data
-    end
-
     it 'should delete a patient if remove button is clicked', js: true do
       within '.list-group' do
         click_link('Remove', match: :first)
@@ -120,29 +116,53 @@ describe 'eHR Example App' do
       within '.select2-results' do
         find('li:first-child').click
       end
-      save_screenshot('screen.png')
+
       click_on('Save')
 
+      # Back on the patient page
+      page.should have_selector('#patient-show')
       check('request')
       click_on('Next')
-      sleep 6
 
+      # Should be on pharmacy list page
+      page.should have_selector('#pharmacies-list')
+      click_on('Finish')
+
+      page.should have_content('Lets pretend that this is your EHR...')
     end
-  end
 
-  describe 'patients show workflow' do
-    it 'should create a prescription for patient', js: true do
+    it 'should navigate patient show if patient name is clicked and patient has prescription assigned', js: true do
       visit '/#/patients'
 
       within '.list-group li:first-child' do
         find('a:first-child').click
       end
 
-      within '#request-add' do
-        fill_in('Drug', with: 'Nexium')
+      # Find a drug
+      find('#s2id_drug').click
+      find('.select2-input').set('Nexium')
+      page.should have_selector('.select2-result-selectable')
+      within '.select2-results' do
+        find('li:first-child').click
       end
-      #page.should have_css('.select2-no-results', count: 0)
-      #page.should have_selector('select2-result-selectable')
+
+      # Find a form
+      find('#s2id_form').click
+      find('.select2-input').set('bcbs')
+      page.should have_selector('.select2-result-selectable')
+      within '.select2-results' do
+        find('li:first-child').click
+      end
+
+      click_on('Save')
+
+      visit '/#/patients'
+
+      within '.list-group li:first-child' do
+        find('a:first-child').click
+      end
+
+      page.should have_content('Prescriptions')
     end
 
   end

@@ -76,6 +76,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   capybara-webkit
+  guard
   guard-rspec
   launchy
   pry
