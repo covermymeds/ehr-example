@@ -8,21 +8,6 @@
   5. Create standalone request
   6. View "help" page
 
-* Either fix grunt-jasmine or get rid of it
-* Pagination for Dashboard
-
-number_of_pages = Math.floor(results / results_per_page)
-to_template = results.slice(current_page * results_per_page,
-results_per_page)
-results.slice(40, 10) = 3 results
-
-var requests = '';
-$.ajax({
-  success: function (data) {
-    requests = data;  
-    
-    // Draw html here
-    // Draw nav links here
-    // Write pagination event handlers here
-  }
-})
+* Remove grunt-jasmine from project 
+* Remove default data from "New Patient" view; change to placeholders
+* Merge most recent dist source from js-api-consumer
