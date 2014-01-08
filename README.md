@@ -85,7 +85,7 @@ Endpoint. When the next button is clicked the example application
 gathers the prescriptions and sends them off to be created. All of this
 logic is done in the ``` /src/views/patients/list.js ``` file.
 
-Upon completion of these requests you will theng be directed to the 
+Upon completion of these requests you will then be directed to the 
 pharmacy view to choose a pharmacy and complete the cycle.
 
 Route: ``` /#/requests/new  ```
