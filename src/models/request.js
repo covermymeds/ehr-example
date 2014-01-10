@@ -7,6 +7,7 @@ define([
     return Backbone.Model.extend({
         defaults: {
             "sent": false,
+            "formularyStatus": "Tier 1, Quantity Limit",
             "request": {
                 "urgent": "",
                 "form_id": "",

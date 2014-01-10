@@ -63,6 +63,7 @@ define([
             data = {
                 formName: this.$('input[name="request[form_id]"]').select2('data').text,
                 drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
+                formularyStatus: this.$('input[name="request[formulary_status]"]:checked').val(),
                 request: {
                     form_id: this.$('input[name="request[form_id]"]').val(),
                     state: this.$('select[name="request[state]"]').val(),
