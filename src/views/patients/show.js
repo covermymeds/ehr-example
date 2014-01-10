@@ -61,6 +61,12 @@ define([
             count = 0;
             total = this.$('input[name="request"]:checked').length;
 
+            // Still take user to pharmacy list, even if not starting PA requests
+            if (total === 0) {
+                window.app.navigate('patients/' + self.patientId + '/pharmacies', { trigger: true });
+                return;
+            }
+
             // Create a PA request for each checked checkbox
             this.$('input[name="request"]:checked').each(function (index, checkbox) {
                 var requestId,

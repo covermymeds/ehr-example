@@ -10,25 +10,35 @@
   <% if (requests.length < 1) { %>
   <h5>No drugs have been added for this patient yet.</h5>
   <% } else { %>
-  <table class="table">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>Drug</th>
+        <th>Formulary Status</th>
+        <th class="start">Start PA</th>
         <th>Form</th>
-        <th>&nbsp;</th>
-        <th class="pull-right">Start PA</th>
+        <th>Change Drug</th>
       </tr>
     </thead>
     <% requests.each(function(request) { %>
       <tr>
         <td><%= request.get('drugName') %></td>
+        <td><%= request.get('formularyStatus') %></td>
+        <td class="start">
+          <% if (request.get('sent') === true) { %>
+          <input type="checkbox" checked="checked" disabled="disabled">
+          <% } else { %>
+          <input type="checkbox" name="request" value="<%= request.cid %>">
+          <% } %>
+        </td>
         <td><%= request.get('formName') %></td>
-        <td><a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary pull-right">Change Drug</button></td>
-        <% if (request.get('sent') === true) { %>
-        <td><input type="checkbox" class="pull-right" checked="checked" disabled="disabled"></td>
-        <% } else { %>
-        <td><input type="checkbox" name="request" class="pull-right" value="<%= request.cid %>"></td>
-        <% } %>
+        <td>
+          <% if (request.get('sent') === true) { %>
+          <a href="#/patients/<%= patient.id %>" class="btn btn-primary disabled">Change Drug</button>
+          <% } else { %>
+          <a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary pull-right">Change Drug</button>
+          <% } %>
+        </td>
       </tr>
     <% }); %>
   </table>

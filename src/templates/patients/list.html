@@ -7,17 +7,26 @@
   <h2>No Patients</h2>
   <% } %>
 
-  <ul class="list-group">
-  <% patientsCollection.each(function (patient) { %>
-  <li class="list-group-item">
-  <a href="#/patients/<%= patient.id %>">
-    <span class="badge"><%= patient.get('requestsCollection').length %></span>
-    <%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)
-  </a>
-
-  <a href="#/patients/<%= patient.id %>/destroy" class="btn btn-xs
-    btn-danger pull-right">Remove</a>
-  </li>
-  <% }); %>
-  </ul>
+  <table class="table table-striped">
+    <tr>
+      <th class="open">Open PAs</th>
+      <th>Patient Name</th>
+      <th class="remove">Remove</th>
+    </tr>
+    <% patientsCollection.each(function (patient) { %>
+    <tr>
+      <td class="open">
+        <span class="label label-info"><%= patient.get('requestsCollection').length %></span>
+      </td>
+      <td>
+        <a href="#/patients/<%= patient.id %>">
+          <%= patient.get('first_name') %> <%= patient.get('last_name') %> (<%= patient.get('date_of_birth') %>)
+        </a>
+      </td>
+      <td class="remove">
+        <a href="#/patients/<%= patient.id %>/destroy" class="btn btn-xs btn-danger">X</a>
+      </td>
+    </tr>
+    <% }); %>
+  </table>
 </div>
