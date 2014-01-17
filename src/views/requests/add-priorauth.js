@@ -33,7 +33,6 @@ define([
             this.$('#drug').drugSearch();
             this.$('#form').formSearch();
             this.$('#create').createRequest({
-                staging: true,
                 success: function (data) {
                     var ids = localStorage.getObject('ids') || [];
                     ids.push(data.request.id);

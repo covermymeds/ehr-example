@@ -19,7 +19,6 @@ define([
             }
 
             this.$('#dashboard').dashboard({
-                staging: true,
                 ids: ids
             });
         }
