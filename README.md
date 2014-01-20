@@ -22,7 +22,11 @@ run ``` guard ``` to run through the tests.
 
 Run ``` bundle ``` if you have not installed the gem dependencies. Once
 bundle completes run ``` ruby server.rb ``` to serve the ehr example
-application using Sinatra.
+application using Sinatra. 
+
+There is a configuration file with a sample API key in `lib/config.js`, but you'll
+want to use your own unique key. Contact us at [developers@covermymeds.com](mailto:developers@covermymeds.com)
+for an API key as well as implementation support.
 
 ### Walkthrough
 

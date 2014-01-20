@@ -14,12 +14,11 @@ define([
             var ids = localStorage.getObject('ids') || [];
 
             if (ids.length === 0) {
-                ids = ['BE9WB4', 'WF4KU6', 'KE7JD8'];
+                ids = ['DJ8BX3', 'MU4AK9', 'MH8YJ8'];
                 localStorage.setObject('ids', ids);
             }
 
             this.$('#dashboard').dashboard({
-                staging: true,
                 ids: ids
             });
         }

@@ -78,7 +78,6 @@ define([
                 requestData = requestModel.get('request');
 
                 button.createRequest({
-                    staging: true,
                     data: { request: requestData },
                     success: function (data) {
                         var id,
