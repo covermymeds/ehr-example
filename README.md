@@ -16,7 +16,7 @@ Example e-prescribing/dashboard app.
 * Bundler
 
 Run ``` bundle ``` to install all of the gem dependencies. Once complete
-run ``` guard ``` to run through the tests.
+run ``` rspec ``` to run through the tests.
 
 ### Installation 
 
