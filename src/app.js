@@ -90,11 +90,18 @@ define([
         },
 
         initialize: function () {
+            var nav;
+
             // Clear out any previous flash messages
             localStorage.setObject('flash', null);
 
+            // Add some example requests to display in the dashboard
+            if (localStorage.getObject('ids') === null) {
+                localStorage.setObject('ids', ['DJ8BX3', 'MU4AK9', 'MH8YJ8']);
+            }
+
             // Create navigation
-            var nav = new NavigationView({ el: $('#app') });
+            nav = new NavigationView({ el: $('#app') });
 
             // Create initial subview
             this.el = $('#page-load-target');

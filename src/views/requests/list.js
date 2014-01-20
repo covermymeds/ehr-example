@@ -13,11 +13,6 @@ define([
 
             var ids = localStorage.getObject('ids') || [];
 
-            if (ids.length === 0) {
-                ids = ['DJ8BX3', 'MU4AK9', 'MH8YJ8'];
-                localStorage.setObject('ids', ids);
-            }
-
             this.$('#dashboard').dashboard({
                 ids: ids
             });
