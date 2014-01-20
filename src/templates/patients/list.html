@@ -8,13 +8,13 @@
   <% } %>
 
   <table class="table table-striped">
-    <tr>
+    <tr class="header">
       <th class="open">Open PAs</th>
       <th>Patient Name</th>
       <th class="remove">Remove</th>
     </tr>
     <% patientsCollection.each(function (patient) { %>
-    <tr>
+    <tr class="patients">
       <td class="open">
         <span class="label label-info"><%= patient.get('requestsCollection').length %></span>
       </td>

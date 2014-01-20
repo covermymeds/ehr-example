@@ -57,22 +57,22 @@ describe 'eHR Example App' do
     end
 
     it 'should create ten default patients by default', js: true do
-      page.should have_selector('.list-group li')
-      page.should have_css('.list-group li', count: 10)
+      page.should have_selector('.table')
+      page.should have_css('.table tr.patients', count: 10)
     end
 
     it 'should navigate to new prescription form if patient is clicked with no prescriptions assigned', js: true do
-      within '.list-group li:first-child' do
-        find('a:first-child').click
+      within '.table tr.patients:nth-child(2)' do
+        find('a', match: :first).click
       end
       page.should have_content('New Prescription')
     end
 
     it 'should delete a patient if remove button is clicked', js: true do
-      within '.list-group' do
-        click_link('Remove', match: :first)
+      within '.table' do
+        click_link('X', match: :first)
       end
-      page.should have_css('.list-group li', count: 9)
+      page.should have_css('.table tr.patients', count: 9)
     end
 
   end
@@ -97,8 +97,8 @@ describe 'eHR Example App' do
       visit '/#/patients'
 
       # Find the first patient and click on them
-      within '.list-group li:first-child' do
-        find('a:first-child').click
+      within '.table tr.patients:nth-child(2)' do
+        find('a', match: :first).click
       end
 
       # Find a drug
@@ -121,7 +121,9 @@ describe 'eHR Example App' do
 
       # Back on the patient page
       page.should have_selector('#patient-show')
-      check('request')
+
+      check('request', match: :first)
+
       click_on('Next')
 
       # Should be on pharmacy list page
@@ -134,8 +136,8 @@ describe 'eHR Example App' do
     it 'should navigate patient show if patient name is clicked and patient has prescription assigned', js: true do
       visit '/#/patients'
 
-      within '.list-group li:first-child' do
-        find('a:first-child').click
+      within '.table tr.patients:nth-child(2)' do
+        find('a', match: :first).click
       end
 
       # Find a drug
@@ -158,8 +160,8 @@ describe 'eHR Example App' do
 
       visit '/#/patients'
 
-      within '.list-group li:first-child' do
-        find('a:first-child').click
+      within '.table tr.patients:nth-child(2)' do
+        find('a', match: :first).click
       end
 
       page.should have_content('Prescriptions')
