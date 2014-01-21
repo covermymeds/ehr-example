@@ -15,10 +15,11 @@
 		    <input class="form-control" id="drug" name="request[drug_id]">
 		</p>
 
-		<p>
-			<label for="form">Form</label>
-			<input class="form-control" id="form" name="request[form_id]">
-		</p>
+		<!--<p>-->
+			<!--<label for="form">Form</label>-->
+			<!--<input class="form-control" id="form" name="request[form_id]">-->
+		<!--</p>-->
+    <input type="hidden" class="form-control" id="form" name="request[form_id]" value="anthem_ppi_quantity_limit_15636">
 
 		<p>
 			<label for="quantity">Quantity</label>
@@ -58,23 +59,6 @@
         <input type="checkbox" name="request[prescription][dispense_as_written]" id="yes" value="yes">
       </label>
     </p>
-
-    <label>Formulary Status</label><br>
-
-    <div class="radio">
-      <input type="radio" id="tier_3" name="request[formulary_status]" value="Tier 3, PA">
-      <label for="tier_3">Tier 3, PA</label><br>
-    </div>
-
-    <div class="radio">
-      <input type="radio" id="tier_2" name="request[formulary_status]" value="Tier 2, Step Therapy">
-      <label for="tier_2">Tier 2, Step Therapy</label><br>
-    </div>
-
-    <div class="radio">
-      <input type="radio" id="tier_1" name="request[formulary_status]" value="Tier 1, Quantity Limit">
-      <label for="tier_1">Tier 1, Quantity Limit</label>
-    </div>
 
 		<p>
       <% if (patient.get('requestsCollection').length === 0) { %>

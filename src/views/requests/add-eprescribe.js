@@ -28,7 +28,7 @@ define([
             this.render();
 
             $('#drug').drugSearch();
-            $('#form').formSearch();
+            //$('#form').formSearch();
 
             // Fill in values to "edit" a request
             if (this.requestId !== undefined) {
@@ -65,12 +65,15 @@ define([
 
         createRequest: function () {
             var requestModel,
-                data;
+                data,
+                formularyStatuses;
+
+            formularyStatuses = ['Tier 3, PA', 'Tier 2, Step Therapy', 'Tier 1, Quantity Limit'];
 
             data = {
                 formName: this.$('input[name="request[form_id]"]').select2('data').text,
                 drugName: this.$('input[name="request[drug_id]"]').select2('data').text,
-                formularyStatus: this.$('input[name="request[formulary_status]"]:checked').val(),
+                formularyStatus: _.sample(formularyStatuses),
                 request: {
                     form_id: this.$('input[name="request[form_id]"]').val(),
                     state: this.$('select[name="request[state]"]').val(),
