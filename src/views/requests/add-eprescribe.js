@@ -28,7 +28,7 @@ define([
             this.render();
 
             $('#drug').drugSearch();
-            $('#form').formSearch();
+            //$('#form').formSearch();
 
             // Fill in values to "edit" a request
             if (this.requestId !== undefined) {
