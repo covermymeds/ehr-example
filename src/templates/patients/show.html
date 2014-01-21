@@ -16,7 +16,6 @@
         <th>Drug</th>
         <th>Formulary Status</th>
         <th class="start">Start PA</th>
-        <th>Form</th>
         <th>Change Drug</th>
       </tr>
     </thead>
@@ -31,12 +30,11 @@
           <input type="checkbox" name="request" value="<%= request.cid %>">
           <% } %>
         </td>
-        <td><%= request.get('formName') %></td>
         <td>
           <% if (request.get('sent') === true) { %>
           <a href="#/patients/<%= patient.id %>" class="btn btn-primary disabled">Change Drug</button>
           <% } else { %>
-          <a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary pull-right">Change Drug</button>
+          <a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary">Change Drug</button>
           <% } %>
         </td>
       </tr>
