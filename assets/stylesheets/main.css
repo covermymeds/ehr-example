@@ -1,7 +1,11 @@
-body { font: 16px/1.5 Helvetica, sans-serif; margin: 0; padding: 50px 0 0 0; }
-
-.template { padding: 40px 15px; }
-
+body {
+  font: 16px/1.5 Helvetica, sans-serif;
+  margin: 0;
+  padding: 50px 0 0 0;
+}
+.template {
+  padding: 40px 15px;
+}
 .request {
   background: #f7f7f9;
   border-top: 1px solid #dddddd;
@@ -22,18 +26,14 @@ body { font: 16px/1.5 Helvetica, sans-serif; margin: 0; padding: 50px 0 0 0; }
   color: #222222;
   padding: 10px 0 10px 20px;
 }
-
 /* app specific styles */
 /* ----------------------- */
-
-#patients-list {
-  table {
-    .open, .remove { width: 100px; text-align: center; }
-  }
+#patients-list table .open,
+#patients-list table .remove {
+  width: 100px;
+  text-align: center;
 }
-
-#patient-show {
-  table {
-    .start { width: 100px; text-align: center; }
-  }
+#patient-show table .start {
+  width: 100px;
+  text-align: center;
 }

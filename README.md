@@ -8,7 +8,7 @@ Example e-prescribing/dashboard app.
 * jQuery
 * Backbone
 * Underscore
-* js-api-consumer plugins
+* api-jquery-plugins
 
 ### Tests
 
@@ -18,20 +18,26 @@ Example e-prescribing/dashboard app.
 Run ``` bundle ``` to install all of the gem dependencies. Once complete
 run ``` rspec ``` to run through the tests.
 
-### Installation 
+### Installation
 
 Run ``` bundle ``` if you have not installed the gem dependencies. Once
 bundle completes run ``` ruby server.rb ``` to serve the ehr example
-application using Sinatra. 
+application using Sinatra.
 
 There is a configuration file with a sample API key in `lib/config.js`, but you'll
 want to use your own unique key. Contact us at [developers@covermymeds.com](mailto:developers@covermymeds.com)
 for an API key as well as implementation support.
 
+### Distribution
+
+To concatenate and minify the source files, run `npm install` to install local
+Node dependencies (the `lessc` preprocessor). Then run `./build.sh` from the
+command line. The resulting source file will be in `dist/src`.
+
 ### Walkthrough
 
 This is a simple demo system to show how to integrate CoverMyMeds into
-your system using the CoverMyMeds API. 
+your system using the CoverMyMeds API.
 
 You will need to create four interface elements:
 
@@ -54,7 +60,7 @@ The patient list view shows patients witin the ehr system. Each patient
 has a count beside their name. This indicates the number of PA requests
 associated with this patient.
 
-From this view you can add a patient by clicking on the green 
+From this view you can add a patient by clicking on the green
 "Add Patient" button at the top. Removing a patient can be done by
 clicking on the red "Remove" button to the right of the patient name.
 
@@ -89,13 +95,13 @@ Endpoint. When the next button is clicked the example application
 gathers the prescriptions and sends them off to be created. All of this
 logic is done in the ``` /src/views/patients/list.js ``` file.
 
-Upon completion of these requests you will then be directed to the 
+Upon completion of these requests you will then be directed to the
 pharmacy view to choose a pharmacy and complete the cycle.
 
 Route: ``` /#/requests/new  ```
 
 Allows you to add a single prior authorization request. The drug and
-form search plugins are used here as well as the create request plugin. 
+form search plugins are used here as well as the create request plugin.
 When the form is filled out and the request is successful you will be
 redirected to the task list or dashboard page.
 

@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global window: false, define: false, localStorage: false, alert: true */
+/*global window: false, define: false, localStorage: false, CMM_API_CONFIG: false */
 define([
     'jquery',
     'underscore',
@@ -78,6 +78,9 @@ define([
                 requestData = requestModel.get('request');
 
                 button.createRequest({
+                    apiId: CMM_API_CONFIG.apiId,
+                    apiSecret: CMM_API_CONFIG.apiSecret,
+                    version: 1,
                     data: { request: requestData },
                     success: function (data) {
                         var id,

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # echo "Converting .less to .css"
-# lessc assets/stylesheets/main.less > assets/stylesheets/main.css
+node_modules/less/bin/lessc assets/stylesheets/main.less > assets/stylesheets/main.css
 
 # Concatenate the project files
 node tools/r.js -o build.js
@@ -12,10 +12,10 @@ node tools/r.js -o build.js
 echo "Removing .DS_Store files"
 rm -rf `find ./build -type f -name .DS_Store`
 
-echo "Copying to `dist` folder"
+echo "Copying to 'dist' folder"
 rm -rf dist
-mkdir dist
-cp build/src/main.js dist/ehr-example.js
+mkdir -p dist/src
+cp build/src/main.js dist/src/ehr-example.js
 cp -R build/assets dist
 
 echo "Removing build directory"
