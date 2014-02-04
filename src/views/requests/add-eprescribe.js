@@ -1,5 +1,5 @@
 /*jslint sloppy: true, nomen: true */
-/*global window: false, define: false */
+/*global window: false, define: false, CMM_API_CONFIG: false */
 define([
     'jquery',
     'underscore',
@@ -27,8 +27,11 @@ define([
             this.elem = $(this.template({ patient: this.patient }));
             this.render();
 
-            $('#drug').drugSearch();
-            //$('#form').formSearch();
+            $('#drug').drugSearch({
+                apiId: CMM_API_CONFIG.apiId,
+                apiSecret: CMM_API_CONFIG.apiSecret,
+                version: 1
+            });
 
             // Fill in values to "edit" a request
             if (this.requestId !== undefined) {
@@ -60,7 +63,6 @@ define([
         /* Remove custom event handlers/plugins */
         onClose: function () {
             $('#drug').drugSearch('destroy');
-            $('#form').formSearch('destroy');
         },
 
         createRequest: function () {
