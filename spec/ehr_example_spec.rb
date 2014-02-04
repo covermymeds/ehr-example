@@ -110,12 +110,12 @@ describe 'eHR Example App' do
       end
 
       # Find a form
-      find('#s2id_form').click
-      find('.select2-input').set('bcbs')
-      page.should have_selector('.select2-result-selectable')
-      within '.select2-results' do
-        find('li:first-child').click
-      end
+      # find('#s2id_form').click
+      # find('.select2-input').set('bcbs')
+      # page.should have_selector('.select2-result-selectable')
+      # within '.select2-results' do
+      #   find('li:first-child').click
+      # end
 
       click_on('Save')
 
@@ -149,12 +149,12 @@ describe 'eHR Example App' do
       end
 
       # Find a form
-      find('#s2id_form').click
-      find('.select2-input').set('bcbs')
-      page.should have_selector('.select2-result-selectable')
-      within '.select2-results' do
-        find('li:first-child').click
-      end
+      # find('#s2id_form').click
+      # find('.select2-input').set('bcbs')
+      # page.should have_selector('.select2-result-selectable')
+      # within '.select2-results' do
+      #   find('li:first-child').click
+      # end
 
       click_on('Save')
 
