@@ -17,14 +17,21 @@ body {
 .request:last-child {
   border-bottom: 1px solid #dddddd;
 }
-#dashboard ul {
-  list-style-type: none;
-}
 .dropdown-header {
   font-size: 1.3em;
   font-weight: bold;
   color: #222222;
   padding: 10px 0 10px 20px;
+}
+#dashboard dt {
+  width: 60px;
+}
+#dashboard dd {
+  margin-left: 75px;
+}
+#dashboard td.form-thumbnail {
+  width: 120px;
+  padding-top: 16px;
 }
 #patients-list table .open,
 #patients-list table .remove {
