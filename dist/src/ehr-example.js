@@ -1079,25 +1079,42 @@ define("cmmconfig", function(){});
 
     window.JST.dashboard = _.template([
         '<div class="row">',
-        '<div class="col-md-3">',
+        '<div class="navigation col-md-3">',
+            '<div class="order btn-group btn-group-justified">',
+                '<div class="btn-group"><button type="button" data-direction="desc" class="btn btn-default active">Newest First</button></div>',
+                '<div class="btn-group"><button type="button" data-direction="asc" class="btn btn-default">Oldest First</button></div>',
+            '</div>',
+            '<hr>',
+            '<ul class="folders nav nav-pills nav-stacked">',
+                '<% _.each(folders, function (folder, name) { %>',
+                '<li class="<%= name === currentFolder ? "active" : "" %>"><a href="#<%= name %>"><span class="glyphicon glyphicon-folder-close"></span> <%= name %> <span class="badge pull-right"><%= folder.data.length %></span></a></li>',
+                '<% }); %>',
+            '</ul>',
+            '<hr>',
             '<form action="#" class="well" method="get" role="form">',
             '<fieldset>',
                 '<legend>Search</legend>',
-                '<div class="form-group"><input class="form-control" name="patient_first_name" placeholder="First Name" size="30" type="text" value="<%= filters.firstName %>"></div>',
-                '<div class="form-group"><input class="form-control" name="patient_last_name" placeholder="Last Name" size="30" type="text" value="<%= filters.lastName %>"></div>',
-                '<div class="form-group"><input class="form-control" data-behavior="datepicker" name="patient_date_of_birth" placeholder="Date of Birth" size="30" type="text" value="<%= filters.dob %>"></div>',
-                '<div class="form-group"><input class="form-control" name="drug_name" placeholder="Drug" size="30" type="text" value="<%= filters.drug %>"></div>',
-                '<div class="form-group"><input class="form-control" name="request_id" placeholder="Key" size="30" type="text" value="<%= filters.key %>"></div>',
-                '<div class="form-group">',
-                    '<button class="btn btn-primary search" type="submit">Search</button> ',
-                    '<button class="btn search clear">Clear</button>',
-
+                '<div class="input-group">',
+                    '<input class="form-control search" name="q" placeholder="Search" type="search">',
+                    '<span class="input-group-btn">',
+                        '<button class="clear btn btn-default" type="button"><span class="clear glyphicon glyphicon-remove"></span></button>',
+                    '</span>',
                 '</div>',
               '</fieldset>',
             '</form>',
         '</div>',
-        '<div class="col-md-9">',
+        '<div class="content col-md-9">',
+        '</div> <!-- /.content -->',
+        '</div> <!-- /.row -->'
+    ].join(''));
+
+    window.JST.dashboardContent = _.template([
         '<table class="table table-striped requests">',
+        '<% if (requests.length === 0) { %>',
+        '<tr>',
+            '<td><h4>No Results</h4></td>',
+        '</tr>',
+        '<% } %>',
         '<% _.each(requests, function (request) { %>',
             '<tr>',
                 '<td class="form-thumbnail">',
@@ -1141,9 +1158,7 @@ define("cmmconfig", function(){});
                 '<% } %>',
                 '<li class="<%= (i === currentPage) ? "active" : "" %>"><a href="<%= i %>"><%= (i + 1) %></a></li>',
             '</ul>',
-        '<% } %>',
-        '</div> <!-- /.span9 -->',
-        '</div> <!-- /.row -->'
+        '<% } %>'
     ].join(''));
 
     window.JST.formsearch = _.template([
@@ -1460,8 +1475,16 @@ define("cmmconfig", function(){});
     });
 }(jQuery));
 
-/*jslint sloppy: true, unparam: true, todo: true, nomen: true, plusplus: true, continue: true */
+/*jslint sloppy: true, unparam: true, todo: true, nomen: true */
 /*global alert: false, jQuery: false, CMM_API_CONFIG: false, Base64: false, JST: false, _: false */
+
+/*
+TODO:
+    1. Add folders by "status," with counts on each one
+    2. Add sort order by date
+    3. Single "live" search field
+*/
+
 (function ($) {
     // String.trim() polyfill
     if (!String.prototype.trim) {
@@ -1470,9 +1493,12 @@ define("cmmconfig", function(){});
         };
     }
 
+    /**
+     * @constructor
+     */
     var CmmDashboard = function (options) {
         // Ensure 'this' -> 'CmmDashboard' in all these methods
-        _.bindAll(this, 'load', 'filter', 'render', 'paginate');
+        _.bindAll(this, 'load', 'sort', 'filter', 'render', 'paginate', 'search', 'selectFolder', 'order', 'bindEvents', 'unbindEvents');
 
         this.elem = options.elem;   // jQuery object to draw into
         this.url = options.url;
@@ -1485,25 +1511,32 @@ define("cmmconfig", function(){});
         this.currentPage = 0;
         this.perPage = 10;
 
-        this.filters = {
-            firstName: '',
-            lastName: '',
-            dob: '',
-            drug: '',
-            key: ''
+        this.currentFolder = 'All';
+        this.folders = {
+            'All': { workflow_statuses: ["New", "Shared", "Shared \\ Accessed Online", "Appealed", "Sent to Plan"], data: [] },
+            'New': { workflow_statuses: ["New", "Shared", "Shared \\ Accessed Online"], data: [] },
+            'Open': { workflow_statuses: ["Appealed", "Sent to Plan"], data: [] }
         };
+
+        this.currentOrder = 'desc';
 
         if (options.data === undefined) {
             this.load(_.bind(function () {
-                this.filteredData = this.data;
+                this.sort();
+                this.filter();
                 this.render();
             }, this));
         } else {
-            this.data = this.filteredData = options.data;
+            this.data = options.data;
+            this.sort();
+            this.filter();
             this.render();
         }
     };
 
+    /**
+     * @description Load data for dashboard to display
+     */
     CmmDashboard.prototype.load = function (callback) {
         var self = this;
 
@@ -1533,69 +1566,191 @@ define("cmmconfig", function(){});
         });
     };
 
-    // Transform this.data -> this.filteredData
+    /**
+     * @description Sort by "created_at" timestamp - newer first
+     */
+    CmmDashboard.prototype.sort = function () {
+        var self = this;
+
+        this.data.sort(function sortByDate(a, b) {
+            if (a.created_at === b.created_at) {
+                return 0;
+            }
+
+            return a.created_at < b.created_at ? 1 : -1;
+        });
+
+        _.each(this.data, function sortIntoFolders(request) {
+            _.each(self.folders, function (folder, name) {
+                if (folder.workflow_statuses.indexOf(request.workflow_status) !== -1) {
+                    folder.data.push(request);
+                }
+            });
+        });
+    };
+
+    /**
+     * @description Filter data based on search input
+     */
     CmmDashboard.prototype.filter = function (clear) {
-        var request,
-            i;
+        var data,
+            request,
+            i,
+            j;
 
-        if (clear === true) {
-            this.filters.firstName = this.filters.lastName = this.filters.dob = this.filters.drug = this.filters.key = null;
-
-            this.filteredData = this.data;
-
-            return;
-        }
+        data = this.folders[this.currentFolder].data;
 
         // Clear out previous filtered values
         this.filteredData = [];
+        this.searchQuery = $('input[name=q]').val() || '';
+        this.searchQuery = this.searchQuery.trim().toLowerCase();
 
-        this.filters.firstName = $('input[name="patient_first_name"]').val().trim();
-        this.filters.lastName = $('input[name="patient_last_name"]').val().trim();
-        this.filters.dob = $('input[name="patient_date_of_birth"]').val().trim();
-        this.filters.drug = $('input[name="drug_name"]').val().trim();
-        this.filters.key = $('input[name="request_id"]').val().trim();
+        // Just use default data if no search query
+        if (this.searchQuery === '') {
+            this.filteredData = data;
+            return;
+        }
 
-        i = this.data.length;
-        while (i--) {
-            // determine if this.data[i] fits curent criteria
-            request = this.data[i];
+        for (i = 0, j = data.length; i < j; i += 1) {
+            request = data[i];
 
-            if (this.filters.firstName) {
-                if (request.patient.first_name.toLowerCase().indexOf(this.filters.firstName.toLowerCase()) === -1) {
-                    continue;
-                }
+            // determine if request matches any of the searchable fields - first/last name, dob, drug name, or PA key (id)
+            // Only add the request one time if there's any kind of match
+            if (request.patient.first_name.toLowerCase().indexOf(this.searchQuery) !== -1) {
+                this.filteredData.push(request);
+            } else if (request.patient.last_name.toLowerCase().indexOf(this.searchQuery) !== -1) {
+                this.filteredData.push(request);
+            } else if (request.patient.date_of_birth.toLowerCase().indexOf(this.searchQuery) !== -1) {
+                this.filteredData.push(request);
+            } else if (request.prescription.name && request.prescription.name.toLowerCase().indexOf(this.searchQuery) !== -1) {
+                this.filteredData.push(request);
+            } else if (request.id.toLowerCase().indexOf(this.searchQuery) !== -1) {
+                this.filteredData.push(request);
             }
-
-            if (this.filters.lastName) {
-                if (request.patient.last_name.toLowerCase().indexOf(this.filters.lastName.toLowerCase()) === -1) {
-                    continue;
-                }
-            }
-
-            if (this.filters.dob) {
-                if (request.patient.date_of_birth.toLowerCase().indexOf(this.filters.dob.toLowerCase()) === -1) {
-                    continue;
-                }
-            }
-
-            if (this.filters.drug) {
-                if (request.prescription.drug_name.toLowerCase().indexOf(this.filters.drug.toLowerCase()) === -1) {
-                    continue;
-                }
-            }
-
-            if (this.filters.key) {
-                if (request.id.toLowerCase().indexOf(this.filters.key.toLowerCase()) === -1) {
-                    continue;
-                }
-            }
-
-            // If still here, that means the request passed all filters
-            this.filteredData.push(request);
         }
     };
 
+    /**
+     * @description Write main template to DOM
+     */
     CmmDashboard.prototype.render = function () {
+        // Render main template to DOM
+        this.elem.html(JST.dashboard({ folders: this.folders, currentFolder: this.currentFolder }));
+
+        // Display content
+        this.displayContent();
+
+        this.bindEvents();
+    };
+
+    /**
+     * @description Set up event handlers
+     */
+    CmmDashboard.prototype.bindEvents = function () {
+        // Handle pagination
+        $('.pagination a', this.elem).on('click', this.paginate);
+
+        // Handle searching
+        $('input.search', this.elem).on('keyup', _.debounce(this.search, 500));
+        $('button.clear', this.elem).on('click', this.search);
+
+        // Handle folder selection
+        $('.folders a', this.elem).on('click', this.selectFolder);
+
+        // Handle date ordering
+        $('.order button', this.elem).on('click', this.order);
+    };
+
+    /**
+     * @description Remove event handlers
+     */
+    CmmDashboard.prototype.unbindEvents = function () {
+        // Handle pagination
+        $('.pagination a', this.elem).off('click', this.paginate);
+
+        // Handle searching
+        $('input.search', this.elem).off('keyup', _.debounce(this.search, 500));
+        $('button.clear', this.elem).off('click', this.search);
+
+        // Handle folder selection
+        $('.folders a', this.elem).off('click', this.selectFolder);
+
+        // Handle date ordering
+        $('.order button', this.elem).off('click', this.order);
+    };
+
+    /*
+     * @description Reverse sort order of requests
+     */
+    CmmDashboard.prototype.order = function (event) {
+        var button = $(event.target);
+
+        if (this.currentOrder !== button.data('direction')) {
+            button.addClass('active').parent('div').siblings('div').children('button').removeClass('active');
+            this.currentOrder = button.data('direction');
+            _.each(this.folders, function (folder) {
+                folder.data.reverse();
+            });
+            this.displayContent();
+        }
+    };
+
+    /**
+     * @description Handle changing sub-folders of requests
+     */
+    CmmDashboard.prototype.selectFolder = function (event) {
+        var folder = $(event.target);
+
+        event.preventDefault();
+
+        $('.folders li', this.elem).removeClass('active');
+        folder.parent('li').addClass('active');
+        this.currentFolder = folder.attr('href').substring(1);
+        this.currentPage = 0;
+        this.filter();
+        this.displayContent();
+    };
+
+    /**
+     * @description Handle search form input
+     */
+    CmmDashboard.prototype.search = function (event) {
+        var target = $(event.target);
+        event.preventDefault();
+
+        if (target.hasClass('clear')) {
+            $('input[name=q]', this.elem).val('');
+        }
+
+        this.currentPage = 0;
+        this.filter();
+        this.displayContent();
+    };
+
+    /**
+     * @description Handle changing pages for request results
+     */
+    CmmDashboard.prototype.paginate = function (event) {
+        var page,
+            button;
+
+        event.preventDefault();
+        button = $(event.target);
+
+        page = parseInt(button.attr('href'), 10);
+
+        if (isNaN(page)) {
+            return;
+        }
+
+        this.currentPage = page;
+        this.displayContent();
+    };
+
+    /**
+     * @description Write current page of requests to the DOM
+     */
+    CmmDashboard.prototype.displayContent = function () {
         var begin,
             end,
             totalPages;
@@ -1604,39 +1759,8 @@ define("cmmconfig", function(){});
         end = begin + this.perPage;
         totalPages = Math.ceil(this.filteredData.length / this.perPage) - 1; // 0-index based
 
-        // Remove any previously-attached event handlers
-        $('.pagination a', this.elem).off('click');
-        $('button.search', this.elem).off('click');
-
-        // Draw to DOM
-        this.elem.empty().append(JST.dashboard({ requests: this.filteredData.slice(begin, end), currentPage: this.currentPage, totalPages: totalPages, filters: this.filters }));
-
-        // Add event handlers
-        $('.pagination a', this.elem).on('click', this.paginate);
-        $('button.search', this.elem).on('click', _.bind(function (event) {
-            event.preventDefault();
-
-            var clear = $(event.target).hasClass('clear');
-
-            this.filter(clear);
-            this.render();
-        }, this));
-    };
-
-    CmmDashboard.prototype.paginate = function (event) {
-        var page;
-
-        event.preventDefault();
-
-        page = parseInt($(event.target).attr('href'), 10);
-
-        if (isNaN(page)) {
-            return;
-        }
-
-        this.currentPage = page;
-
-        this.render();
+        // Render to DOM
+        $('.content', this.elem).html(JST.dashboardContent({ requests: this.filteredData.slice(begin, end), currentPage: this.currentPage, totalPages: totalPages }));
     };
 
     $.fn.extend({
@@ -1644,16 +1768,21 @@ define("cmmconfig", function(){});
             // Remove event handler created by this plugin
             if (options === 'destroy') {
                 return this.each(function () {
-                    var elem = $(this);
-                    $('.pagination a', elem).off('click');
-                    $('button.search', elem).off('click');
+                    var elem = $(this),
+                        dashboard = elem.data('dashboard');
+
+                    if (dashboard) {
+                        dashboard.unbindEvents();
+                    }
+
                     elem.remove();
                 });
             }
 
             return this.each(function () {
-                options = $.extend(options, { elem: $(this) });
-                new CmmDashboard(options);
+                var elem = $(this);
+                options = $.extend(options, { elem: elem });
+                elem.data('dashboard', new CmmDashboard(options));
             });
         }
     });
