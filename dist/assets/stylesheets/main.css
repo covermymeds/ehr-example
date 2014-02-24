@@ -42,3 +42,6 @@ body {
   width: 100px;
   text-align: center;
 }
+button.clear {
+  padding: 7px 12px 4px 12px;
+}

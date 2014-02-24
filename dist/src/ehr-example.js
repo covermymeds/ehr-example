@@ -403,8 +403,8 @@ define('views/patients/show',[
                     version: 1,
                     data: { request: requestData },
                     success: function (data) {
-                        var id,
-                            savedIds,
+                        var tokenId,
+                            savedTokenIds,
                             row;
 
                         // Persist data locally
@@ -416,10 +416,10 @@ define('views/patients/show',[
                         self.patient.save();
 
                         // Add the new request ID to localstorage, so we can view it in our dashboard
-                        id = data.request.id;
-                        savedIds = localStorage.getObject('ids') || [];
-                        savedIds.push(id);
-                        localStorage.setObject('ids', savedIds);
+                        tokenId = data.request.tokens[0].id;
+                        savedTokenIds = localStorage.getObject('tokenIds') || [];
+                        savedTokenIds.push(tokenId);
+                        localStorage.setObject('tokenIds', savedTokenIds);
 
                         // Hide the "change drug" button and disable the
                         // "submit drug" checkbox
@@ -478,13 +478,12 @@ define('views/requests/list',[
             this.elem = $(template);
             this.render();
 
-            var ids = localStorage.getObject('ids') || [];
+            var tokenIds = localStorage.getObject('tokenIds') || [];
 
             this.$('#dashboard').dashboard({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1,
-                ids: ids
+                tokenIds: tokenIds
             });
         }
     });
@@ -524,7 +523,6 @@ define('views/requests/add-eprescribe',[
 
             $('#drug').drugSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
 
@@ -647,22 +645,19 @@ define('views/requests/add-priorauth',[
 
             this.$('#drug').drugSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
             this.$('#form').formSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
             this.$('#create').createRequest({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1,
                 success: function (data) {
-                    var ids = localStorage.getObject('ids') || [];
-                    ids.push(data.request.id);
-                    localStorage.setObject('ids', ids);
+                    var tokenIds = localStorage.getObject('tokenIds') || [];
+                    tokenIds.push(data.request.tokens[0].id);
+                    localStorage.setObject('tokenIds', tokenIds);
 
                     self.flash('success', 'Your prescription was created successfully.');
 
@@ -1065,7 +1060,6 @@ define("select2", ["bootstrap"], function(){});
      */
     window.CMM_API_CONFIG = {
         apiId: '1vd9o4427lyi0ccb2uem',
-        apiSecret: 'q4trxd3rj8w38qfykqn-l9zcmxxlnibzwciof6pu',
         version: 1
     };
 }(window));
@@ -1202,7 +1196,7 @@ define("cmmconfig", function(){});
                             // otherwise we assume our custom URL will handle authorization
                             if (!options.url) {
                                 params.beforeSend = function (xhr) {
-                                    xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':' + options.apiSecret));
+                                    xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':x-no-pass'));
                                 };
                             }
 
@@ -1284,7 +1278,7 @@ define("cmmconfig", function(){});
                             // otherwise we assume our custom URL will handle authorization
                             if (!options.url) {
                                 params.beforeSend = function (xhr) {
-                                    xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':' + options.apiSecret));
+                                    xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':x-no-pass'));
                                 };
                             }
 
@@ -1372,9 +1366,7 @@ define("cmmconfig", function(){});
                                 "date_of_birth": $('input[name="request[patient][date_of_birth]"]').val(),
                                 "gender": $('select[name="request[patient][gender]"]').val(),
                                 "email": $('input[name="request[patient][email]"]').val(),
-                                "health_plan_name": $('input[name="request[patient][health_plan_name]"]').val(),
                                 "member_id": $('input[name="request[patient][member_id]"]').val(),
-                                "group_id": $('input[name="request[patient][group_id]"]').val(),
                                 "phone_number": $('input[name="request[patient][phone_number]"]').val(),
                                 "address": {
                                     "street_1": $('input[name="request[patient][address][street_1]"]').val(),
@@ -1383,6 +1375,14 @@ define("cmmconfig", function(){});
                                     "state": $('select[name="request[patient][address][state]"]').val(),
                                     "zip": $('input[name="request[patient][address][zip]"]').val()
                                 }
+                            },
+                            "payer": {
+                                "form_search_text": $('input[name="request[payer][form_search_text]"]').val(),
+                                "bin": $('input[name="request[payer][bin]"]').val(),
+                                "pcn": $('input[name="request[payer][pcn]"]').val(),
+                                "group_id": $('input[name="request[payer][group_id]"]').val(),
+                                "medical_benefit_name": $('input[name="request[payer][medical_benefit_name]"]').val(),
+                                "drug_benefit_name": $('input[name="request[payer][drug_benefit_name]"]').val(),
                             },
                             "prescriber": {
                                 "npi": $('input[name="request[prescriber][npi]"]').val(),
@@ -1444,7 +1444,7 @@ define("cmmconfig", function(){});
                         type: 'POST',
                         beforeSend: function (xhr, settings) {
                             if (!options.url) {
-                                xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':' + options.apiSecret));
+                                xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(options.apiId + ':x-no-pass'));
                             }
                         },
                         success: function (data, status, xhr) {
@@ -1478,13 +1478,6 @@ define("cmmconfig", function(){});
 /*jslint sloppy: true, unparam: true, todo: true, nomen: true */
 /*global alert: false, jQuery: false, CMM_API_CONFIG: false, Base64: false, JST: false, _: false */
 
-/*
-TODO:
-    1. Add folders by "status," with counts on each one
-    2. Add sort order by date
-    3. Single "live" search field
-*/
-
 (function ($) {
     // String.trim() polyfill
     if (!String.prototype.trim) {
@@ -1504,9 +1497,8 @@ TODO:
         this.url = options.url;
         this.defaultUrl = 'https://' + (options.debug ? 'staging.' : '') + 'api.covermymeds.com/requests/search?v=' + options.version;
 
-        this.ids = options.ids || [];
+        this.tokenIds = options.tokenIds || [];
         this.apiId = options.apiId || '';
-        this.apiSecret = options.apiSecret || '';
 
         this.currentPage = 0;
         this.perPage = 10;
@@ -1546,11 +1538,11 @@ TODO:
             url: this.url || this.defaultUrl,
             type: 'POST',
             data: {
-                ids: this.ids
+                token_ids: this.tokenIds
             },
             beforeSend: function (xhr, settings) {
                 if (self.url === undefined) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode(self.apiId + ':' + self.apiSecret));
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + self.apiId + '+');
                 }
             },
             success: function (data, status, xhr) {
@@ -2535,8 +2527,8 @@ define('app',[
             localStorage.setObject('flash', null);
 
             // Add some example requests to display in the dashboard
-            if (localStorage.getObject('ids') === null) {
-                localStorage.setObject('ids', ['DJ8BX3', 'MU4AK9', 'MH8YJ8']);
+            if (localStorage.getObject('tokenIds') === null) {
+                localStorage.setObject('tokenIds', ['gq9vmqai2mkwewv1y55x', '33lhqakhtmas8r965w39', 's4c85zi3ku0b9re5sg1o']);
             }
 
             // Create navigation
