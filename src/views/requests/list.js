@@ -11,13 +11,12 @@ define([
             this.elem = $(template);
             this.render();
 
-            var ids = localStorage.getObject('ids') || [];
+            var tokenIds = localStorage.getObject('tokenIds') || [];
 
             this.$('#dashboard').dashboard({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1,
-                ids: ids
+                tokenIds: tokenIds
             });
         }
     });

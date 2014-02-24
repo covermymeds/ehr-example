@@ -96,8 +96,8 @@ define([
             localStorage.setObject('flash', null);
 
             // Add some example requests to display in the dashboard
-            if (localStorage.getObject('ids') === null) {
-                localStorage.setObject('ids', ['DJ8BX3', 'MU4AK9', 'MH8YJ8']);
+            if (localStorage.getObject('tokenIds') === null) {
+                localStorage.setObject('tokenIds', ['gq9vmqai2mkwewv1y55x', '33lhqakhtmas8r965w39', 's4c85zi3ku0b9re5sg1o']);
             }
 
             // Create navigation

@@ -83,8 +83,8 @@ define([
                     version: 1,
                     data: { request: requestData },
                     success: function (data) {
-                        var id,
-                            savedIds,
+                        var tokenId,
+                            savedTokenIds,
                             row;
 
                         // Persist data locally
@@ -96,10 +96,10 @@ define([
                         self.patient.save();
 
                         // Add the new request ID to localstorage, so we can view it in our dashboard
-                        id = data.request.id;
-                        savedIds = localStorage.getObject('ids') || [];
-                        savedIds.push(id);
-                        localStorage.setObject('ids', savedIds);
+                        tokenId = data.request.tokens[0].id;
+                        savedTokenIds = localStorage.getObject('tokenIds') || [];
+                        savedTokenIds.push(tokenId);
+                        localStorage.setObject('tokenIds', savedTokenIds);
 
                         // Hide the "change drug" button and disable the
                         // "submit drug" checkbox

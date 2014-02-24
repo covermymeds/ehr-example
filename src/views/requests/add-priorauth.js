@@ -35,22 +35,19 @@ define([
 
             this.$('#drug').drugSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
             this.$('#form').formSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
             this.$('#create').createRequest({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1,
                 success: function (data) {
-                    var ids = localStorage.getObject('ids') || [];
-                    ids.push(data.request.id);
-                    localStorage.setObject('ids', ids);
+                    var tokenIds = localStorage.getObject('tokenIds') || [];
+                    tokenIds.push(data.request.tokens[0].id);
+                    localStorage.setObject('tokenIds', tokenIds);
 
                     self.flash('success', 'Your prescription was created successfully.');
 

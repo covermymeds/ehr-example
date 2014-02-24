@@ -29,7 +29,6 @@ define([
 
             $('#drug').drugSearch({
                 apiId: CMM_API_CONFIG.apiId,
-                apiSecret: CMM_API_CONFIG.apiSecret,
                 version: 1
             });
 
