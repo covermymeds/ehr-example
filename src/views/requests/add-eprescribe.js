@@ -76,13 +76,47 @@ define([
                 drugName: this.$('input[name="request[prescription][drug_id]"]').select2('data').text,
                 formularyStatus: _.sample(formularyStatuses),
                 request: {
+                    urgent: false,
                     form_id: this.$('input[name="request[form_id]"]').val(),
                     state: this.$('select[name="request[state]"]').val(),
                     patient: {
                         first_name: this.$('input[name="request[patient][first_name]"]').val(),
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
                         date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
-                        state: this.$('select[name="request[state]"]').val()
+                        gender: Math.rand() > 0.5 ? 'M' : 'F',
+                        email: 'user@example.com',
+                        member_id: '123456789',
+                        phone_number: '555-555-5555',
+                        address: {
+                            street_1: '123 Main St.',
+                            street_2: 'Suite #123',
+                            city: 'Anytown',
+                            state: this.$('select[name="request[state]"]').val(),
+                            zip: '12345'
+                        }
+                    },
+                    payer: {
+                        form_search_text: 'sample plan',
+                        bin: '111111',
+                        pcn: 'SAMP001',
+                        group_id: 'NOTREAL',
+                        medical_benefit_name: 'A medical benefit',
+                        drug_benefit_name: 'A drug benefit'
+                    },
+                    prescriber: {
+                        npi: '1234567890',
+                        first_name: 'John',
+                        last_name: 'Doe',
+                        clinic_name: 'Medicine Inc.',
+                        address: {
+                            street_1: '456 Main St.',
+                            street_2: 'Suite #789',
+                            city: 'Anytown',
+                            state: 'CA',
+                            zip: '11111'
+                        },
+                        fax_number: '444-444-4444',
+                        phone_number: '333-333-3333'
                     },
                     prescription: {
                         drug_id: this.$('input[name="request[prescription][drug_id]"]').val(),
@@ -90,6 +124,26 @@ define([
                         quantity: this.$('input[name="request[prescription][quantity]"]').val(),
                         dispense_as_written: this.$('input[name="request[prescription][dispense_as_written]"]').val(),
                         frequency: this.$('input[name="request[prescription][frequency]"]').val()
+                    },
+                    pharmacy: {
+                        name: 'Small Town Drug Store',
+                        address: {
+                            street_1: '345 Main St.',
+                            street_2: 'Suite #293',
+                            city: 'Columbus',
+                            state: 'OH',
+                            zip: '22222'
+                        },
+                        fax_number: '444-444-4444',
+                        phone_number: '333-333-3333'
+                    },
+                    enumerated_fields: {
+                        icd9_0: '327.0',
+                        icd9_1: '327.1',
+                        icd9_2: '327.2',
+                        failed_med_0: 'Generic alternative #1',
+                        failed_med_1: 'Generic alternative #2',
+                        failed_med_2: 'Generic alternative #3'
                     }
                 }
             };
