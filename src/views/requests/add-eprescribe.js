@@ -83,7 +83,7 @@ define([
                         first_name: this.$('input[name="request[patient][first_name]"]').val(),
                         last_name: this.$('input[name="request[patient][last_name]"]').val(),
                         date_of_birth: this.$('input[name="request[patient][date_of_birth]"]').val(),
-                        gender: Math.rand() > 0.5 ? 'M' : 'F',
+                        gender: Math.random() > 0.5 ? 'M' : 'F',
                         email: 'user@example.com',
                         member_id: '123456789',
                         phone_number: '555-555-5555',
@@ -112,8 +112,8 @@ define([
                             street_1: '456 Main St.',
                             street_2: 'Suite #789',
                             city: 'Anytown',
-                            state: 'CA',
-                            zip: '11111'
+                            state: this.$('select[name="request[state]"]').val(),
+                            zip: '12345'
                         },
                         fax_number: '444-444-4444',
                         phone_number: '333-333-3333'
@@ -130,9 +130,9 @@ define([
                         address: {
                             street_1: '345 Main St.',
                             street_2: 'Suite #293',
-                            city: 'Columbus',
-                            state: 'OH',
-                            zip: '22222'
+                            city: 'Anytown',
+                            state: this.$('select[name="request[state]"]').val(),
+                            zip: '12345'
                         },
                         fax_number: '444-444-4444',
                         phone_number: '333-333-3333'
