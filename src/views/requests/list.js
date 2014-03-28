@@ -7,6 +7,10 @@ define([
 ], function ($, Backbone, template) {
 
     return Backbone.View.extend({
+        events: {
+            'click .request-details a': 'appendFakeUserData'
+        },
+
         initialize: function () {
             this.elem = $(template);
             this.render();
@@ -18,6 +22,12 @@ define([
                 version: 1,
                 tokenIds: tokenIds
             });
+        },
+
+        appendFakeUserData: function (event) {
+            event.target.href += ['&remote_user[display_name]=EHR%20Demo%20User',
+                                  '&remote_user[phone_number]=8664525017',
+                                  '&remote_user[fax_number]=6153792541'].join('');
         }
     });
 
