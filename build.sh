@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # echo "Converting .less to .css"
 node_modules/less/bin/lessc assets/stylesheets/main.less > assets/stylesheets/main.css
