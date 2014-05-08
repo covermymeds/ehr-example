@@ -38,7 +38,7 @@ define("backbone", ["underscore","jquery"], (function (global) {
 }(this)));
 
 define('text',{load: function(id){throw new Error("Dynamic load not allowed: " + id);}});
-define('text!templates/default.html',[],function () { return '<div class="template">\n  <h1>Lets pretend that this is your EHR...</h1>\n  <p class="lead">This is a simple demo system to show how to integrate CoverMyMeds into your system using the <a href="https://api.covermymeds.com/">CoverMyMeds API</a>. You will need to create four interface elements:</p>\n  <ol>\n    <li>a button to start a prior authorization while the provider is\n    working with an electronic prescription.</li>\n    <li>a prior authorization task list which will be used to show the PAs being worked upon.</li>\n    <li>a form to start a new prior authorization.</li>\n    <li>a contact page so CoverMyMeds can help your users.</li>\n  </ol>\n</div>\n';});
+define('text!templates/default.html',[],function () { return '<div class="template">\n  <h1>Let\'s pretend that this is your EHR...</h1>\n  <p class="lead">This is a simple demo system to show how to integrate CoverMyMeds into your system using the <a href="https://api.covermymeds.com/">CoverMyMeds API</a>. You will need to create four interface elements:</p>\n  <ol>\n    <li>a button to start a prior authorization while the provider is\n    working with an electronic prescription.</li>\n    <li>a prior authorization task list which will be used to show the PAs being worked upon.</li>\n    <li>a form to start a new prior authorization.</li>\n    <li>a contact page so CoverMyMeds can help your users.</li>\n  </ol>\n</div>\n';});
 
 /*jslint sloppy: true, nomen: true */
 /*global define: false */
