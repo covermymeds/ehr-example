@@ -15,9 +15,9 @@ describe 'eHR Example App' do
     end
 
     it 'should navigate to the home view', js: true do
-      visit '/#/patients' # To test the home link visit another page besides the home page
+      visit '#/patients' # To test the home link visit another page besides the home page
       click_link('Home')
-      page.should have_content('Lets pretend that this is your EHR...')
+      page.should have_content('pretend that this is your EHR...')
     end
 
     it 'should navigate to the dashboard view', js: true do
@@ -37,6 +37,28 @@ describe 'eHR Example App' do
       click_link('Contact CoverMyMeds')
       page.should have_content('For assistance using CoverMyMeds')
     end
+
+    it 'should navigate to the CoverMyMeds API page', js: true do
+      click_link('Resources')
+      click_link('API Documentation')
+      current_url.should eql('https://api.covermymeds.com/#overview')
+    end
+
+    it 'should navigate to CoverMyMeds api doc with link on main page', js: true do
+      click_link('CoverMyMeds API')
+      current_url.should eql('https://api.covermymeds.com/')
+    end
+
+    it 'should show the patients list by clicking button on home page', js: true do
+      click_link('Patient List')
+      page.should have_content('Patients')
+    end
+
+    it 'should show the dashboard by clicking button on the home page', js: true do
+      click_link('Show all Prior Authorizations')
+      page.should have_content('Your Dashboard')
+    end
+
 
   end
 
@@ -130,7 +152,7 @@ describe 'eHR Example App' do
       page.should have_selector('#pharmacies-list')
       click_on('Finish')
 
-      page.should have_content('Lets pretend that this is your EHR...')
+      page.should have_content('pretend that this is your EHR...')
     end
 
     it 'should navigate patient show if patient name is clicked and patient has prescription assigned', js: true do
@@ -180,6 +202,9 @@ describe 'eHR Example App' do
     find_link('Contact CoverMyMeds').click
     page.should have_content('For assistance using CoverMyMeds')
   end
+
+
+
 
 end
 

@@ -8,15 +8,15 @@
   <% var requests = patient.get('requestsCollection'); %>
 
   <% if (requests.length < 1) { %>
-  <h5>No drugs have been added for this patient yet.</h5>
+  <h5>No medications have been added for this patient yet.</h5>
   <% } else { %>
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>Drug</th>
+        <th>Medication</th>
         <th>Formulary Status</th>
         <th class="start">Start PA</th>
-        <th>Change Drug</th>
+        <th>&nbsp;</th>
       </tr>
     </thead>
     <% requests.each(function(request) { %>
@@ -32,9 +32,9 @@
         </td>
         <td>
           <% if (request.get('sent') === true) { %>
-          <a href="#/patients/<%= patient.id %>" class="btn btn-primary disabled">Change Drug</button>
+          <a href="#/patients/<%= patient.id %>" class="btn btn-primary disabled">Edit</button>
           <% } else { %>
-          <a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary">Change Drug</button>
+          <a href="#/patients/<%= patient.id %>/drugs/<%= request.cid %>/edit" class="btn btn-primary">Edit</button>
           <% } %>
         </td>
       </tr>
@@ -43,7 +43,7 @@
   <% } %>
 
   <p>
-    <a href="#/patients/<%= patient.id %>/drugs/new" class="btn btn-success">Add Drugs</a>
+    <a href="#/patients/<%= patient.id %>/drugs/new" class="btn btn-success">Add Medication</a>
     <% if (requests.length > 0) { %>
     <button class="btn btn-primary submit">Next</button>
     <% } %>
