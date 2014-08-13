@@ -50,7 +50,7 @@ describe 'eHR Example App' do
     end
 
     it 'should show the patients list by clicking button on home page', js: true do
-      click_link('Start Patient Appointment')
+      click_link('Patient List')
       page.should have_content('Patients')
     end
 
